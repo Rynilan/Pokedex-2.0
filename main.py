@@ -1,6 +1,5 @@
-from view.index import Index
-from tkinter import Tk
+from abstract_main import main
 
 
 if __name__ == '__main__':
-    Index(Tk())
+    main()
