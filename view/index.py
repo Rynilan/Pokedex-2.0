@@ -9,6 +9,8 @@ class Index(Tela):
         self.bg = Canvas(master, bg='#eef')
         self.bg.pack(fill='both')
 
+        self.beautiful_bg()
+
         self.administrar = Button(master,
                                   text='Administrar',
                                   command=self.__gerir)
@@ -28,3 +30,8 @@ class Index(Tela):
         self.administrar.conf(state='disabled')
         Managment(self.__master)
         self.administrar.conf(state='normal')
+
+    def beautiful_bg(self: object) -> None:
+        tela: Canvas = self.bg
+        tela.draw
+

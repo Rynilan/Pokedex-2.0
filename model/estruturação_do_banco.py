@@ -1,4 +1,4 @@
-from crud import conectar
+from model.crud import conectar
 from os import path
 
 
