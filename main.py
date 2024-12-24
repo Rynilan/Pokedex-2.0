@@ -1,4 +1,4 @@
-from abstract_main import main
+from view.abstract_main import main
 
 
 if __name__ == '__main__':
