@@ -2,6 +2,6 @@ from view.tela import Tela
 from tkinter import Toplevel, Tk
 
 
-class Managment(Tela):
+class View(Tela):
     def _html(self: object, master: Tk | Toplevel) -> None:
         pass
