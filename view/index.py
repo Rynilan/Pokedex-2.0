@@ -6,20 +6,39 @@ from view.view import View
 
 class Index(Tela):
     def _html(self: object, master: Tk | Toplevel) -> None:
-        self.bg = Canvas(master, bg='#eef')
-        self.bg.pack(fill='both')
-
-        self.beautiful_bg()
+        self._bg: Canvas
+        self._bg.create_text(120, 143, text='Pokedex\nPowered by: Linux',
+                             anchor='center',
+                             font=('BigBlueTerm437 nerd font', '10'),
+                             justify='center')
+        self._bg.create_text(315, 115,
+                             text='Created by:\n Rynilan\n' +
+                                  'https://github.com/Rynilan',
+                             anchor='center',
+                             font=('BigBlueTerm437 nerd font', '6'),
+                             justify='center',
+                             width=80)
 
         self.administrar = Button(master,
-                                  text='Administrar',
-                                  command=self.__gerir)
-        self.administrar.place(x=100, y=100)
+                                  text='Gerir',
+                                  command=self.__gerir,
+                                  font=('BigBlueTerm437 nerd font', '8'),
+                                  bg='#ffa500')
+        self.administrar.place(x=313, y=200, width=60, anchor='center')
 
         self.vizualizar = Button(master,
-                                 text='Ver Pokemons',
+                                 text='Listar',
+                                 font=('BigBlueTerm437 nerd font', '8'),
+                                 bg='#ffa500',
                                  command=self.__ver)
-        self.vizualizar.place(x=200, y=100)
+        self.vizualizar.place(x=411, y=200, anchor='center', width=60)
+
+        self.sair = Button(master,
+                           text='Sair',
+                           font=('BigBlueTerm437 nerd font', '8'),
+                           bg='#ba55d3',
+                           command=master.destroy)
+        self.sair.place(x=362, y=238, width=60, anchor='center')
 
     def __ver(self: object):
         self.vizualizar.conf(state='disabled')
@@ -30,8 +49,3 @@ class Index(Tela):
         self.administrar.conf(state='disabled')
         Managment(self.__master)
         self.administrar.conf(state='normal')
-
-    def beautiful_bg(self: object) -> None:
-        tela: Canvas = self.bg
-        tela.draw
-
