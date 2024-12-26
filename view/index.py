@@ -6,19 +6,6 @@ from view.view import View
 
 class Index(Tela):
     def _html(self: object, master: Tk | Toplevel) -> None:
-        self._bg: Canvas
-        self._bg.create_text(120, 143, text='Pokedex\nPowered by: Linux',
-                             anchor='center',
-                             font=('BigBlueTerm437 nerd font', '10'),
-                             justify='center')
-        self._bg.create_text(315, 115,
-                             text='Created by:\n Rynilan\n' +
-                                  'https://github.com/Rynilan',
-                             anchor='center',
-                             font=('BigBlueTerm437 nerd font', '6'),
-                             justify='center',
-                             width=80)
-
         self.administrar = Button(master,
                                   text='Gerir',
                                   command=self.__gerir,
@@ -40,12 +27,25 @@ class Index(Tela):
                            command=master.destroy)
         self.sair.place(x=362, y=238, width=60, anchor='center')
 
+    def _desenhar(self: object) -> None:
+        self._bg: Canvas
+        self._bg.create_text(120, 143, text='Pokedex\nPowered by: Linux',
+                             anchor='center',
+                             font=('BigBlueTerm437 nerd font', '10'),
+                             justify='center')
+        self._bg.create_text(315, 115,
+                             text='Created by:\n Rynilan\n' +
+                                  'https://github.com/Rynilan',
+                             anchor='center',
+                             font=('BigBlueTerm437 nerd font', '6'),
+                             justify='center',
+                             width=80)
+
     def __ver(self: object):
-        self.vizualizar.conf(state='disabled')
-        View(self.__master)
-        self.vizualizar.conf(state='normal')
+        self.vizualizar.destroy()
+        self.administrar.destroy()
+        View(self._master)
 
     def __gerir(self: object):
-        self.administrar.conf(state='disabled')
-        Managment(self.__master)
-        self.administrar.conf(state='normal')
+        self.administrar.configure(state='disabled')
+        Managment(self._master)

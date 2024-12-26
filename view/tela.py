@@ -19,15 +19,20 @@ class Tela(ABC):
                 'background' + SEPARADOR + 'background.png'
             )
         )
-        self._bg = Canvas(master, bg='#fff')
+        self._bg = Canvas(master, bg='#F2BFA4')
         self._bg.pack(fill='both')
+        self._html(master)
         self._bg.create_rectangle(35, 98, 205, 188, fill='lightblue')
         self._bg.create_image((0, 0), image=imagem, anchor='nw')
-        self.__master: Tk | Toplevel = master
-        self.__widgets: list = list()
-        self._html(master)
+        self._desenhar()
+        self._master: Tk | Toplevel = master
+        self._widgets: list = list()
         mainloop()
 
     @abstractmethod
     def _html(self: object, master: Tk | Toplevel) -> None:
+        pass
+
+    @abstractmethod
+    def _desenhar(self: object) -> None:
         pass

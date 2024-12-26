@@ -6,7 +6,7 @@ from model.estruturação_do_banco import banco_de_dados
 def main() -> None:
     try:
         banco_de_dados()
-    except:
-        messagebox.showinfo('INFO', 'Tudo pronto, ou algum erro aconteceu.')
+    except Exception as e:
+        messagebox.showerror('ERRO', e)
     finally:
         Index(Tk())
