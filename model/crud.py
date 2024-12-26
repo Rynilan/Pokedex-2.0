@@ -42,13 +42,16 @@ def select_join(
     valores: tuple[any] = ()
 ) -> tuple[str]:
     banco, cursor = conectar()
+    filtro = ''
+    if len(campos) == len(valores) and campos and valores:
+        filtro += 'where '
+        for index in range(len(campos)):
+            filtro += 'tb_pokemons.' + campos[index] + '=' + str(valores[index]) + ' and '
+        filtro = filtro.removesuffix('and ')
     cursor.execute(
-        'SELECT tb_pokemons.numero_geral, tb_pokemons.nome, tipo1.nome AS tipo1_nome, tipo2.nome AS tipo2_nome, tb_pokemons.foto, tb_pokemons.vida, tb_pokemons.defesa, tb_pokemons.ataque, tb_regioes.nome AS regiao_nome, tb_pokemons.descrição FROM tb_pokemons JOIN tb_tipos AS tipo1 ON tb_pokemons.tipo_1 = tipo1.id LEFT JOIN tb_tipos AS tipo2 ON tb_pokemons.tipo_2 = tipo2.id JOIN tb_regioes ON tb_pokemons.região = tb_regioes.id ' +
-        str('' if not (campos and valores) else 'where ' + str(campos[index] + '=' + str(valores[index]) + ' and ' for index in range(len(campos))).removesuffix('and ')) + ' order by numero_geral;'
+        'SELECT tb_pokemons.numero_geral, tb_pokemons.nome, tipo1.nome AS tipo1_nome, tipo2.nome AS tipo2_nome, tb_pokemons.foto, tb_pokemons.vida, tb_pokemons.defesa, tb_pokemons.ataque, tb_regioes.nome AS regiao_nome, tb_pokemons.descrição FROM tb_pokemons JOIN tb_tipos AS tipo1 ON tb_pokemons.tipo_1 = tipo1.id LEFT JOIN tb_tipos AS tipo2 ON tb_pokemons.tipo_2 = tipo2.id JOIN tb_regioes ON tb_pokemons.região = tb_regioes.id ' + filtro + ' order by numero_geral;'
     )
     resultados = cursor.fetchall()
-    for resultado in resultados:
-        print(resultado)
     cursor.close()
     banco.close()
     return resultados
