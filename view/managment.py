@@ -49,7 +49,7 @@ class Managment(Tela):
                                                  height=12,
                                                  width=40)
         campos_widgets.get('campo descrição').pack()
-        self.campos = campos
+        self.campos = campos_widgets
 
         # Criação dos botões parqa as ações especificadas.
         frame_acao = Frame(top, bg='white')
@@ -112,7 +112,25 @@ class Managment(Tela):
         pass
 
     def pesquisar(self: object) -> None:
-        pass
+        colunas = list()
+        valores = list()
+        for key, widget in self.campos.items():
+            key: str
+            if key.startswith('campo '):
+                colunas.append(key[key.find(' ') + 1:])
+                if type(widget) is Text:
+                    valores.append(self.campos.get(key).get(1.0, END))
+                else:
+                    valores.append(self.campos.get(key).get())
+                valores[-1]: str
+                if not valores[-1] or valores[-1] is None or valores[-1] == '\n':
+                    valores.pop()
+                    colunas.pop()
+        self.atualizar_tabela()
+        for campo in campos():
+            self.tabela.heading(campo.lower(), text=campo.capitalize())
+        for elemento in select_join(True, tuple(colunas), tuple(valores)):
+            self.tabela.insert('', END, values=elemento)
 
     def por_colunas(self: object) -> None:
         ''' Método que irá por na tabela os mesmos registros existentes
@@ -131,8 +149,9 @@ class Managment(Tela):
             self.frame_tabela,
             show='headings',
             selectmode='browse',
-            yscrollcommand=self.tabela_scroll.set,
+            yscrollcommand=self.yscroll.set,
+            xscrollcommand=self.xscroll.set,
             columns=campos())
-        self.tabela.configure(yscrollcommand=self.tabela_scroll.set)
         self.tabela.place(relx=0, rely=0, relheight=1, relwidth=0.9)
-        self.por_colunas()
+        self.yscroll.configure(command=self.tabela.yview)
+        self.xscroll.configure(command=self.tabela.xview)
