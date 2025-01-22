@@ -42,10 +42,7 @@ class Index(Tela):
                              width=80)
 
     def __ver(self: object):
-        self.vizualizar.destroy()
-        self.administrar.destroy()
         View(self._master)
 
     def __gerir(self: object):
-        self.administrar.configure(state='disabled')
         Managment(self._master)

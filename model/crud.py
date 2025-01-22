@@ -18,10 +18,10 @@ def campos() -> tuple[str]:
     return resultados
 
 
-def tipos() -> tuple[str]:
+def tipos() -> list[str]:
     banco, cursor = conectar()
     cursor.execute('select nome from tb_tipos;')
-    resultados = cursor.fetchall()
+    resultados = list(elemento[0] for elemento in cursor.fetchall())
     cursor.close()
     banco.close()
     return resultados
@@ -55,3 +55,27 @@ def select_join(
     cursor.close()
     banco.close()
     return resultados
+
+
+def insert(valores: tuple[str],
+           campos: tuple[str] = '*'):
+    banco, cursor = conectar()
+    valores = list(valores)
+    parametro = ''
+    for indice, valor in enumerate(valores):
+        if valor in regioes():
+            cursor.execute('select id from tb_regioes where nome = %s;',
+                           (valor, ))
+            valores[indice] = cursor.fetchall()[0][0]
+        elif valor in tipos():
+            cursor.execute('select id from tb_tipos where nome = %s;',
+                           (valor, ))
+            valores[indice] = cursor.fetchall()
+        parametro += ' %s'
+
+    cursor.execute('insert into tb_pokemons {} values {};'.format(
+        campos.__str__(), valores.__str__()
+    ))
+    banco.commit()
+    cursor.close()
+    banco.close()
