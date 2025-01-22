@@ -79,3 +79,29 @@ def insert(valores: tuple[str],
     banco.commit()
     cursor.close()
     banco.close()
+
+
+def delete(id):
+    mydb, mycursor = conectar()
+    sql = "DELETE FROM tb_pokemons WHERE id = %s"
+    mycursor.execute(sql, (id,))
+    mydb.commit()
+    mycursor.close()
+    mydb.close()
+
+
+def update(identificador, campos, valores):
+    mydb, mycursor = conectar()
+    if len(campos) != len(valores) and campos and valores:
+        print("erro, tamanho dos campos difere dos valores")
+        return
+    parametros_sql = ''
+    for indice in range(0, len(campos)):
+        parametros_sql += '{} = {}, '.format(campos[indice],
+                                             valores[indice])
+    parametros_sql.removesuffix(', ')
+    mycursor.execute('update tb_pokemons set {} where id = {};'.format(
+        parametros_sql, identificador
+    ))
+    mycursor.close()
+    mydb.close()
