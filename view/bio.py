@@ -1,11 +1,16 @@
 import tkinter as tk
 from tkinter import messagebox
-from PIL import Image, ImageTk
 from mysql.connector import connect
 
 
 # Função principal para criar a tela
 def tela_de_biografia(numero: int):
+    try:
+        from PIL import Image, ImageTk
+    except Exception:
+        from os import system
+        system('pip install pillow')
+        from PIL import Image, ImageTk
     banco = connect(host='localhost', user='root', password='', database='Pokedex')
     cursor = banco.cursor()
     cursor.execute('select * from tb_pokemons where numero_geral = ' + str(numero))
