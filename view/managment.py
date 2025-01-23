@@ -2,7 +2,7 @@ from view.tela import Tela
 from tkinter import (Toplevel, Tk, Label, Button, Frame, Text,
                      Scrollbar, ttk, END)
 from model.crud import (
-        campos, conectar, tipos, regioes, select_join, insert, uptade,delete
+        campos, conectar, tipos, regioes, select_join, insert, update, delete
 )
 from assets.classes.Custom_Entry import Entry
 from control.validadores.validacao_nome import validar_nome
@@ -146,15 +146,15 @@ class Managment(Tela):
                )
 
     def update(self: object) -> None:
-      update(self.tabela.selection(),self.pegar_dados(),(
+        update(self.tabela.selection(), self.pegar_dados(), (
                'numero', 'nome', 'descrição', 'vida', 'ataque', 'defesa',
                'tipo1', 'tipo2', 'foto', 'região'
                ))
-      self.atualizar_tabela()
+        self.atualizar_tabela()
 
     def delete(self: object) -> None:
         delete(self.tabela.selection())
-      self.atualizar_tabela()
+        self.atualizar_tabela()
 
     def _desenhar(self: object) -> None:
         pass
@@ -171,7 +171,8 @@ class Managment(Tela):
                 else:
                     valores.append(self.campos.get(key).get())
                 valores[-1]: str
-                if not valores[-1] or valores[-1] is None or valores[-1] == '\n':
+                if (not valores[-1] or valores[-1] is None or
+                        valores[-1] == '\n'):
                     valores.pop()
                     colunas.pop()
         self.atualizar_tabela()
