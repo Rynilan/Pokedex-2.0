@@ -38,6 +38,7 @@ def carregar_estrutura():
     )
     for instrucao in conjunto:
         cursor.execute(instrucao)
+        banco.commit()
     cursor.close()
     banco.close()
 
