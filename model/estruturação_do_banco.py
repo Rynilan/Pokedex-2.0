@@ -11,15 +11,18 @@ def carregar_estrutura():
     banco, cursor = conectar(False)
     conjunto = (
         'create database Pokedex;',
+
         'create table Pokedex.tb_tipos(' +
         'id int (10) not null auto_increment primary key ,' +
         'nome varchar(10) not null' +
         ');',
+
         'create table Pokedex.tb_regioes(' +
         'id int(3) not null auto_increment primary key,' +
         'nome varchar(30) not null,' +
         'offset int(3) not null' +
         ');',
+
         'create table Pokedex.tb_pokemons(' +
         'numero_geral int(10) not null auto_increment primary key,' +
         'nome varchar(50) not null,' +

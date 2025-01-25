@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from mysql.connector import connect
-
+from PIL import Image, ImageTk
 
 # Função principal para criar a tela
 def tela_de_biografia(numero: int):
