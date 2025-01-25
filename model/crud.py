@@ -83,7 +83,7 @@ def insert(valores: tuple[str],
 
 def delete(id):
     mydb, mycursor = conectar()
-    sql = "DELETE FROM tb_pokemons WHERE id = %s"
+    sql = "DELETE FROM tb_pokemons WHERE numero_geral = %s"
     mycursor.execute(sql, (id,))
     mydb.commit()
     mycursor.close()
@@ -92,16 +92,19 @@ def delete(id):
 
 def update(identificador, campos, valores):
     mydb, mycursor = conectar()
-    if len(campos) != len(valores) and campos and valores:
-        print("erro, tamanho dos campos difere dos valores")
-        return
     parametros_sql = ''
+    valores_sql = []
     for indice in range(0, len(campos)):
-        parametros_sql += '{} = {}, '.format(campos[indice],
-                                             valores[indice])
-    parametros_sql.removesuffix(', ')
-    mycursor.execute('update tb_pokemons set {} where id = {};'.format(
-        parametros_sql, identificador
-    ))
+        parametros_sql += f'{campos[indice]} = %s, '
+        valores_sql.append(valores[indice])
+    valores_sql.append(identificador)
+    valores_sql = tuple(valores_sql)
+    parametros_sql = parametros_sql[:len(parametros_sql) - 2]
+    mycursor.execute(
+        'update tb_pokemons set {} where numero_geral = %s;'.format(
+            parametros_sql
+        ), valores_sql
+    )
+    mydb.commit()
     mycursor.close()
     mydb.close()
