@@ -108,3 +108,14 @@ def update(identificador, campos, valores):
     mydb.commit()
     mycursor.close()
     mydb.close()
+
+
+def pegar_dados(numero: int) -> tuple[str]:
+    banco, cursor = conectar()
+    cursor.execute(
+        'select * from tb_pokemons where numero_geral = ' + str(numero) + ';'
+    )
+    dados = cursor.fetchall()
+    cursor.close()
+    banco.close()
+    return tuple(dado for dado in dados[0])
