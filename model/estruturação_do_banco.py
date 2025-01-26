@@ -26,17 +26,17 @@ def carregar_estrutura():
         'create table Pokedex.tb_pokemons(' +
         'numero_geral int(10) not null auto_increment primary key,' +
         'nome varchar(50) not null,' +
-        'tipo_1 int(10) not null,' +
-        'tipo_2 int(10),' +
+        'tipo_1 int(3) not null,' +
+        'tipo_2 int(3),' +
         'foto varchar(100) not null,' +
         'vida int not null,' +
         'defesa int not null,' +
         'ataque int not null,' +
-        'região int(3) not null,' +
-        'descrição varchar(500),' +
+        'regiao int(3) not null,' +
+        'descricao varchar(500),' +
         'foreign key (tipo_2) references tb_tipos(id),' +
         'foreign key (tipo_1) references tb_tipos(id),' +
-        'foreign key (região) references tb_regioes(id)' +
+        'foreign key (regiao) references tb_regioes(id)' +
         ');'
     )
     for instrucao in conjunto:
@@ -48,8 +48,8 @@ def carregar_estrutura():
 
 def inserir_registros():
     banco, cursor = conectar(True)
-    SEPARADOR = '\\'
-    endereco = path.dirname(path.realpath(__file__)).removesuffix('model') + 'assets' + SEPARADOR + 'fotos_pokemons' + SEPARADOR
+    SEPARADOR = '/'
+    endereco = path.dirname(path.realpath(__file__)).removesuffix('model') + 'assets' + SEPARADOR + 'pokemons' + SEPARADOR
     tipos = (
         'Aço', 'Dragão', 'Elétrico', 'Fada', 'Fantasma',
         'Fogo', 'Gelo', 'Grama', 'Inseto', 'Lutador',
@@ -230,7 +230,7 @@ def inserir_registros():
                        info)
     banco.commit()
     for pokemon in pokemons:
-        cursor.execute('insert into tb_pokemons (numero_geral, nome, tipo_1, tipo_2, foto, ataque, defesa, vida, descrição, região) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);', pokemon)
+        cursor.execute('insert into tb_pokemons (numero_geral, nome, tipo_1, tipo_2, foto, ataque, defesa, vida, descricao, regiao) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);', pokemon)
     banco.commit()
     cursor.close()
     banco.close()
