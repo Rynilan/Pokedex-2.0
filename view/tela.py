@@ -5,6 +5,11 @@ from view.bio import Biografia
 
 class Master:
     def __init__(self: object) -> None:
+        ''' Cria instância de Tk e de Frame (master e mainframe),
+        instância os objetos do tipo MainFrame (os que irão criar
+        widgets no mainframe) cria botões de navegação (sair e tela
+        incial) e carrega o index, além de por tudo no laço principal.'''
+
         # Instância da janela (Tk) e mainframe (frame principal).
         self._master = Tk()
         self._mainframe = Frame(self._master)
@@ -24,7 +29,7 @@ class Master:
         self.__main_menu = Button(
             self.__buttons, text='Menu principal',
             command=lambda: self._load(
-                self._index, lambda: self.__main_menu.config(state='disabled')
+                self._index, self.__main_menu.config, 'disabled'
             ),
         )
         self.__main_menu.pack(side='right', expand=True, pady=0)
@@ -34,10 +39,11 @@ class Master:
 
         # Posicionamento do mainframe.
         self._mainframe.place(relwidth=1, relheight=0.95)
-        self._load(self._biografia, numero=10)
+        self._load(self._index, self.__main_menu.config, 'disabled')
         self._master.mainloop()
 
     def __selfdestruct(self: object) -> None:
+        ''' Destrói todo widget que estiver no self._mainframe.'''
         for name, child in self._mainframe.children.items():
             child.destroy()
         self.__main_menu.config(state='normal')
@@ -49,8 +55,10 @@ class Master:
         args: any = None,
         **kwargs
     ) -> None:
-        ''' args são os parâmetros necessários para function,
-        kwargs são os parâmtros necessários para main._create_things.'''
+        ''' Responsável por chamar função 'extra' no momento de carregar
+            tela (function) dando os parâmetros necessários para ela (args) e
+            carregar wigets do MainFrame dado (main._create_things) dando
+            parâmtros específicos necessários (kwargs).'''
         if bool(self._mainframe.children):
             self.__selfdestruct()
         if bool(kwargs):
@@ -65,6 +73,7 @@ class Master:
         self._css_recursivo(self._master)
 
     def __css(self: object, child: object) -> None:
+        ''' Aplica o estilo dado ao widget especificado. '''
         # Adicione os outros atributos a para o design nesse método.
         BG1 = '#fff'
         child.config(bg=BG1)
@@ -72,6 +81,10 @@ class Master:
     def _css_recursivo(
         self: object, objeto: Frame | Tk, nivel: int = 0
     ) -> None:
+        ''' Dado um widget inicial (esperado instância de Tk) e ignorado o
+            nível inicialmente irá iterar pelos filhos do 'pai' e aplicar 
+            estilo, irá olhar os filhos dos filhos do pai (até cinco níveis)
+            caso este tenha.'''
         if nivel > 5:
             print(objeto.config)
             raise RecursionError('Recursion limit acheived, max is 5.')
