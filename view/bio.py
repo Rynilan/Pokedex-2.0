@@ -31,6 +31,8 @@ class Biografia(MainFrame):
                                ))
         self.anterior.grid(row=1, column=0)
 
+        # Desenhar plano de fundo e ajustar posição dos widgets.
+
         # Campos que virão a ter dados alterados
         self.imagem = Label(self._mainframe)
         self.imagem.place(relx=0.1, y=0.1)
