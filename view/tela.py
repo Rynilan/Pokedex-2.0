@@ -34,7 +34,7 @@ class Master:
 
         # Posicionamento do mainframe.
         self._mainframe.place(relwidth=1, relheight=0.95)
-        self._home()
+        self._load(self._biografia, numero=10)
         self._master.mainloop()
 
     def __selfdestruct(self: object) -> None:
@@ -46,20 +46,38 @@ class Master:
         self: object,
         main: MainFrame,
         function: callable = None,
-        args: any = None
+        args: any = None,
+        **kwargs
     ) -> None:
+        ''' args são os parâmetros necessários para function,
+        kwargs são os parâmtros necessários para main._create_things.'''
         if bool(self._mainframe.children):
             self.__selfdestruct()
-        main.create_things()
+        if bool(kwargs):
+            main._create_things(**kwargs)
+        else:
+            main._create_things()
         if function:
             if args:
                 function(args)
             else:
                 function()
-        self._css()
+        self._css_recursivo(self._master)
 
-    def _css(self: object) -> None:
+    def __css(self: object, child: object) -> None:
         # Adicione os outros atributos a para o design nesse método.
         BG1 = '#fff'
-        for name, child in self._mainframe.children.items():
-            child.config(bg=BG1)
+        child.config(bg=BG1)
+
+    def _css_recursivo(
+        self: object, objeto: Frame | Tk, nivel: int = 0
+    ) -> None:
+        if nivel > 5:
+            print(objeto.config)
+            raise RecursionError('Recursion limit acheived, max is 5.')
+        self.__css(objeto)
+        for name, child in objeto.children.items():
+            self.__css(child)
+            tipo = type(child)
+            if (tipo is Frame or tipo is Tk) and child is not objeto:
+                self._css_recursivo(child, nivel + 1)
