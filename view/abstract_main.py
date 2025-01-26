@@ -1,5 +1,5 @@
-from tkinter import Tk, messagebox
-from view.index import Index
+from tkinter import messagebox
+from view.tela import Master
 from model.estruturação_do_banco import banco_de_dados
 
 
@@ -14,4 +14,4 @@ def main() -> None:
         messagebox.showerror('ERRO', 'Imagens não poderão ser carregadas;\n' +
                              import_erro.__str__())
     finally:
-        Index(Tk())
+        Master()

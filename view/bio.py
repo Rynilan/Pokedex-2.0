@@ -1,88 +1,94 @@
-import tkinter as tk
-from tkinter import messagebox
-from mysql.connector import connect
-from PIL import Image, ImageTk
+from tkinter import messagebox, Frame, Label, Button
+from model.crud import select_join
+from view.mainframe import MainFrame
+
 
 # Função principal para criar a tela
-def tela_de_biografia(numero: int):
-    try:
-        from PIL import Image, ImageTk
-    except Exception:
-        from os import system
-        system('pip install pillow')
-        from PIL import Image, ImageTk
-    banco = connect(host='localhost', user='root', password='', database='Pokedex')
-    cursor = banco.cursor()
-    cursor.execute('select * from tb_pokemons where numero_geral = ' + str(numero))
-    dados = cursor.fetchall()
-    cursor.close()
-    banco.close()
-    del cursor, banco
+class Biografia(MainFrame):
+    def _create_things(
+        self: object,
+        **kwargs
+    ) -> None:
+        ''' Parâmetro de número é necessário, numero=int'''
 
-    janela = tk.Tk()
-    janela.title("𝚋𝚒𝚘𝚐𝚛𝚊𝚏𝚒𝚊")
-    janela.geometry("1920x1080")
-    tk.Frame(janela,bg='white').place(rely=0.10,relwidth=1,relheight=0.44)
-    frame = tk.Frame(janela)
-    frame.place(relx=0.1,rely=0.23,relheight=0.5)
+        # Botões de navegação dentre os pokemons.
+        self.botoes = Frame(self._mainframe)
+        self.botoes.pack(side='bottom', fill='x')
+        self.ultimo = Button(self.botoes, text='▾',
+                             command=lambda: self.trocar_pokemon(151))
+        self.ultimo.grid(row=2, column=1)
+        self.primeiro = Button(self.botoes, text='▴',
+                               command=lambda: self.trocar_pokemon(1))
+        self.primeiro.grid(row=0, column=1)
+        self.proximo = Button(self.botoes, text='▸',
+                              command=lambda: self.trocar_pokemon(
+                                self.pokemon_atual + 1
+                              ))
+        self.proximo.grid(row=1, column=0)
+        self.anterior = Button(self.botoes, text='◂',
+                               command=lambda: self.trocar_pokemon(
+                                self.pokemon_atual - 1
+                               ))
+        self.anterior.grid(row=1, column=2)
 
-    # Título centralizado
+        # Campos que virão a ter dados alterados
+        self.titulo = Label(self._mainframe, name='nome')
+        self.titulo.pack(side='top', fill='x')
 
-    titulo = tk.Label(janela, text="𝚋𝚒𝚘𝚐𝚛𝚊𝚏𝚒𝚊", font=("Helvetica",34), fg="black", bg="red")
-    janela.config(bg="red")
-    titulo.pack(pady=20)  # Adiciona título com margem
+        self.dados = Frame(self._mainframe)
+        self.dados.place(relx=0.35, rely=0.1, relwidth=0.65, relheight=0.8)
+        self.tipo = Label(self.dados, text='Tipos: ', name='tipo')
+        self.tipo.pack()
+        self.regiao = Label(self.dados, text='Região: ', name='região')
+        self.regiao.pack()
+        self.atributos = Label(self.dados, name='atributos',
+                               text='Vida: %s\nDefesa: %s\nAtaque: %s\n')
+        self.atributos.pack()
+        self.descricao = Label(self.dados, text='    ')
+        self.descricao.pack()
+        self.imagem = Label(self.dados)
+        self.imagem.place(relx=0.05, rely=0.1)
 
-    # Tentar carregar imagem
-    try:
-        imagem = ImageTk.PhotoImage(Image.open(dados[0][4]))
-        imagem_label = tk.Label(frame, image=imagem)
-        imagem_label.image = imagem  # Manter referência à imagem
-        imagem_label.pack(pady=10)  # Exibe imagem abaixo do título
-    except Exception as e:
-        messagebox.showwarning("Erro", "A imagem não pôde ser carregada!\n" +
-                               "{}".format(e.__str__()))
-        # Exibe um aviso se a imagem não for carregada
+        self.colocar_dados(kwargs.get('numero'))
 
-    # Texto da biografia alinhado à direita
-    biografia_texto = list(dados[0])
-    biografia_texto.pop(4)
-    pp = tk.Label(janela,text=str(biografia_texto[0])+str(biografia_texto[1]),fg='black',bg='white',font=("Consolas",30))
-    pp.place(relx=0.38,rely=0.2)
-    pp = tk.Label(janela,text="𝚃𝙸𝙿𝙾:"+str(biografia_texto[2])+str(biografia_texto[3]),fg='black',bg='white',font=("Corbel",20))
-    pp.place(relx=0.38,rely=0.3)
-    pp = tk.Label(janela,text="𝙳𝙴𝙵𝙴𝚂𝙰:"+str(biografia_texto[4]),fg='black',bg='white',font=("Corbel",20))
-    pp.place(relx=0.38,rely=0.4)
-    pp = tk.Label(janela,text="𝙷𝙿:"+str(biografia_texto[5]),fg='black',bg='white',font=("Corbel",20))
-    pp.place(relx=0.38,rely=0.5)
-    pp = tk.Label(janela,text="𝙰𝚃𝙰𝚀𝚄𝙴:"+str(biografia_texto[6]),fg='black',bg='white',font=("Corbel",20))
-    pp.place(relx=0.38,rely=0.6)
-    pp = tk.Label(janela,text="𝙳𝙴𝚂𝙲𝚁𝙸𝙲𝙰𝙾:"+str(biografia_texto[7]),fg='black',bg='white',font=("Corbel",20))
-    pp.place(relx=0.38,rely=0.7)
-    # Frame para o botão de fechar
-    fechar_frame = tk.Frame(janela, bg="black")  # Criar um frame com fundo preto
-    fechar_frame.pack(side="bottom", pady=20, fill="x")  # Posicionar na parte inferior, ocupando toda a largura
+    def colocar_dados(self: object, numero: int) -> None:
+        try:
+            dados = tuple(str(dado) for dado in select_join(
+                                True, ('numero_geral', ), (str(numero), )
+            )[0])
+        except Exception as error:
+            messagebox.showwarning('ERRO', error)
+            return
 
-    def primeiro(tela_biografia,pokemon_atual):
-        tela_biografia.destroy()
-        tela_biografia(1)
+        # Tentar carregar imagem
+        try:
+            from PIL import Image, ImageTk
 
-    # Botão "Fechar" centralizado dentro do frame
-    fechar_btn = tk.Button(fechar_frame, text="Fechar", command=janela.quit, font=("Helvetica", 14))
-    fechar_btn.pack()  # Centraliza o botão dentro do frame
-    ultima=tk.Button(janela,text='ultimo',command=ultimo)
-    ultima.pack()
+            imagem = ImageTk.PhotoImage(Image.open(dados[4]))
+            self.imagem.image = imagem
+        except Exception as e:
+            messagebox.showwarning("Erro",
+                                   "Não foi possível carregar a imagem\n" +
+                                   "{}".format(e.__str__()))
 
-    primeira= tk.Button(janela,text='primeiro',command=primeiro)
-    primeira.pack()
+        self.titulo['text'] = dados[0] + '. ' + dados[1]
+        self.tipo['text'] = str(
+            self.tipo['text'] + dados[2] +
+            (' e ' + dados[3] if dados[3] != 'NULL' else '') + '.'
+        )
+        self.regiao['text'] += dados[8]
+        self.atributos['text'] = self.atributos['text'] % (dados[5:8])
+        desc, st, max, inc = [], 0, 20, 20
+        while max <= len(dados[9]):
+            desc.append(dados[9][st:max])
+            st, max = max, max + inc
+        desc.append(dados[9][st:])
+        self.descricao['text'] = str(
+            '\n'.join(desc)
+            if dados[9] != 'NULL' else
+            'Não há descrição'
+        )
+        self.pokemon_atual = numero
 
-    # Executar a janela
-    janela.mainloop()
-
-def ultimo (janela,pokemon_atual):
-    janela.destroy()
-
-    tela_de_biografia(151)
-
-# Chama a função para mostrar a janela
-if __name__ == '__main__':
-    tela_de_biografia(1)
+    def trocar_pokemon(self: object, proximo: int):
+        self.colocar_dados(proximo)

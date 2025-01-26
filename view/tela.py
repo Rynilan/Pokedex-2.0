@@ -1,38 +1,48 @@
-from tkinter import Tk, Toplevel, Canvas, mainloop
-from abc import ABC, abstractmethod
-from PIL import ImageTk
-from os import path
+from tkinter import Tk, Button, Frame
+from view.mainframe import MainFrame
+from view.bio import Biografia
 
 
-class Tela(ABC):
-    def __init__(self: object, master: Tk | Toplevel) -> None:
-        master.resizable(False, False)
-        master.geometry('480x270')
-        master.title('Pokedex')
-        SEPARADOR = '/'
-        imagem = ImageTk.PhotoImage(
-            file=str(
-                path.dirname(
-                    path.realpath(__file__)
-                ).removesuffix('view')
-                + SEPARADOR + 'assets' + SEPARADOR +
-                'background' + SEPARADOR + 'background.png'
-            )
-        )
-        self._bg = Canvas(master, bg='#F2BFA4')
-        self._bg.pack(fill='both')
-        self._html(master)
-        self._bg.create_rectangle(35, 98, 205, 188, fill='lightblue')
-        self._bg.create_image((0, 0), image=imagem, anchor='nw')
-        self._desenhar()
-        self._master: Tk | Toplevel = master
-        self._widgets: list = list()
-        mainloop()
+class Master:
+    def __init__(self: object) -> None:
+        # Instância da janela (Tk) e mainframe (frame principal).
+        self._master = Tk()
+        self._mainframe = Frame(self._master)
 
-    @abstractmethod
-    def _html(self: object, master: Tk | Toplevel) -> None:
-        pass
+        # Declaração dos objetos mainframe.
+        # (Falta atribuir objeto).
+        self._gerenciar: MainFrame
+        self._ver: MainFrame
+        self._biografia: MainFrame = Biografia(self._master, self._mainframe, self)
+        self._index: MainFrame
 
-    @abstractmethod
-    def _desenhar(self: object) -> None:
-        pass
+        # Criação dos botões de sair e menu principal
+        self.__buttons = Frame(self._master)
+        self.__buttons.pack(side='bottom', fill='x')
+        self.__main_menu = Button(self.__buttons, command=self._home,
+                                  text='Menu principal')
+        self.__main_menu.grid(row=0, column=0, padx=5, pady=5)
+        self.__exit = Button(self.__buttons, command=self._master.destroy,
+                             text='Sair')
+        self.__exit.grid(row=0, column=0, padx=5, pady=5)
+
+        # Posicionamento do mainframe.
+        self._mainframe.place(x=0, y=0, relwidth=1.0, relheight=1.0)
+        self._home()
+        self._master.mainloop()
+
+    def _home(self: object, called_by: object = None) -> None:
+        if called_by:
+            called_by._kill_own_widgets()
+        self.__main_menu.config(state='disabled')
+        self._html()
+
+    def _html(self: object) -> None:
+        # self._index.create_things()
+        self._biografia._create_things(numero=1)
+
+    def _css(self: object) -> None:
+        # Adicione os outros atributos a para o design nesse método.
+        BG1 = '#fff'
+        for name, child in self._mainframe.children.items():
+            child.config(bg=BG1)
