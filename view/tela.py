@@ -21,8 +21,12 @@ class Master:
         # Criação dos botões de sair e menu principal
         self.__buttons = Frame(self._master)
         self.__buttons.place(relwidth=1, relheight=0.05, rely=0.95)
-        self.__main_menu = Button(self.__buttons, command=self._home,
-                                  text='Menu principal')
+        self.__main_menu = Button(
+            self.__buttons, text='Menu principal',
+            command=lambda: self._load(
+                self._index, lambda: self.__main_menu.config(state='disabled')
+            ),
+        )
         self.__main_menu.pack(side='right', expand=True, pady=0)
         self.__exit = Button(self.__buttons, command=self._master.destroy,
                              text='Sair')
@@ -33,15 +37,26 @@ class Master:
         self._home()
         self._master.mainloop()
 
-    def _home(self: object, called_by: object = None) -> None:
-        if called_by:
-            called_by._kill_own_widgets()
-        self.__main_menu.config(state='disabled')
-        self._html()
+    def __selfdestruct(self: object) -> None:
+        for name, child in self._mainframe.children.items():
+            child.destroy()
+        self.__main_menu.config(state='normal')
 
-    def _html(self: object) -> None:
-        # self._index.create_things()
-        self._biografia._create_things(numero=1)
+    def _load(
+        self: object,
+        main: MainFrame,
+        function: callable = None,
+        args: any = None
+    ) -> None:
+        if bool(self._mainframe.children):
+            self.__selfdestruct()
+        main.create_things()
+        if function:
+            if args:
+                function(args)
+            else:
+                function()
+        self._css()
 
     def _css(self: object) -> None:
         # Adicione os outros atributos a para o design nesse método.
