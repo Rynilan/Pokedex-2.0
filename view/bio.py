@@ -32,6 +32,8 @@ class Biografia(MainFrame):
         self.anterior.grid(row=1, column=2)
 
         # Campos que virão a ter dados alterados
+        self.imagem = Label(self._mainframe)
+        self.imagem.place(relx=0.1, y=0.1)
         self.titulo = Label(self._mainframe, name='nome')
         self.titulo.pack(side='top', fill='x')
 
@@ -44,10 +46,9 @@ class Biografia(MainFrame):
         self.atributos = Label(self.dados, name='atributos',
                                text='Vida: %s\nDefesa: %s\nAtaque: %s\n')
         self.atributos.pack()
-        self.descricao = Label(self.dados, text='    ')
+        self.descricao = Label(self.dados, text='', justify='left',
+                               wraplength=300)
         self.descricao.pack()
-        self.imagem = Label(self.dados)
-        self.imagem.place(relx=0.05, rely=0.1)
 
         self.colocar_dados(kwargs.get('numero'))
 
@@ -64,7 +65,10 @@ class Biografia(MainFrame):
         try:
             from PIL import Image, ImageTk
 
-            imagem = ImageTk.PhotoImage(Image.open(dados[4]))
+            imagem = ImageTk.PhotoImage(Image.open(dados[4]).resize(
+                (300, 300)
+            ))
+            self.imagem.config(image=imagem)
             self.imagem.image = imagem
         except Exception as e:
             messagebox.showwarning("Erro",
@@ -78,15 +82,8 @@ class Biografia(MainFrame):
         )
         self.regiao['text'] += dados[8]
         self.atributos['text'] = self.atributos['text'] % (dados[5:8])
-        desc, st, max, inc = [], 0, 20, 20
-        while max <= len(dados[9]):
-            desc.append(dados[9][st:max])
-            st, max = max, max + inc
-        desc.append(dados[9][st:])
         self.descricao['text'] = str(
-            '\n'.join(desc)
-            if dados[9] != 'NULL' else
-            'Não há descrição'
+                dados[9] if dados[9] != 'NULL' else 'Não há descrição.'
         )
         self.pokemon_atual = numero
 
