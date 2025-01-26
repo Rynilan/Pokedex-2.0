@@ -13,21 +13,23 @@ class Master:
         # (Falta atribuir objeto).
         self._gerenciar: MainFrame
         self._ver: MainFrame
-        self._biografia: MainFrame = Biografia(self._master, self._mainframe, self)
+        self._biografia: MainFrame = Biografia(
+            self._master, self._mainframe, self
+        )
         self._index: MainFrame
 
         # Criação dos botões de sair e menu principal
         self.__buttons = Frame(self._master)
-        self.__buttons.pack(side='bottom', fill='x')
+        self.__buttons.place(relwidth=1, relheight=0.05, rely=0.95)
         self.__main_menu = Button(self.__buttons, command=self._home,
                                   text='Menu principal')
-        self.__main_menu.grid(row=0, column=0, padx=5, pady=5)
+        self.__main_menu.pack(side='right', expand=True, pady=0)
         self.__exit = Button(self.__buttons, command=self._master.destroy,
                              text='Sair')
-        self.__exit.grid(row=0, column=0, padx=5, pady=5)
+        self.__exit.pack(side='right', expand=True, pady=0)
 
         # Posicionamento do mainframe.
-        self._mainframe.place(x=0, y=0, relwidth=1.0, relheight=1.0)
+        self._mainframe.place(relwidth=1, relheight=0.95)
         self._home()
         self._master.mainloop()
 

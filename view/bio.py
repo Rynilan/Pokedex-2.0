@@ -24,27 +24,26 @@ class Biografia(MainFrame):
                               command=lambda: self.trocar_pokemon(
                                 self.pokemon_atual + 1
                               ))
-        self.proximo.grid(row=1, column=0)
+        self.proximo.grid(row=1, column=2)
         self.anterior = Button(self.botoes, text='◂',
                                command=lambda: self.trocar_pokemon(
                                 self.pokemon_atual - 1
                                ))
-        self.anterior.grid(row=1, column=2)
+        self.anterior.grid(row=1, column=0)
 
         # Campos que virão a ter dados alterados
         self.imagem = Label(self._mainframe)
         self.imagem.place(relx=0.1, y=0.1)
-        self.titulo = Label(self._mainframe, name='nome')
+        self.titulo = Label(self._mainframe)
         self.titulo.pack(side='top', fill='x')
 
         self.dados = Frame(self._mainframe)
         self.dados.place(relx=0.35, rely=0.1, relwidth=0.65, relheight=0.8)
-        self.tipo = Label(self.dados, text='Tipos: ', name='tipo')
+        self.tipo = Label(self.dados)
         self.tipo.pack()
-        self.regiao = Label(self.dados, text='Região: ', name='região')
+        self.regiao = Label(self.dados)
         self.regiao.pack()
-        self.atributos = Label(self.dados, name='atributos',
-                               text='Vida: %s\nDefesa: %s\nAtaque: %s\n')
+        self.atributos = Label(self.dados)
         self.atributos.pack()
         self.descricao = Label(self.dados, text='', justify='left',
                                wraplength=300)
@@ -77,12 +76,14 @@ class Biografia(MainFrame):
 
         self.titulo['text'] = dados[0] + '. ' + dados[1]
         self.tipo['text'] = str(
-            self.tipo['text'] + dados[2] +
+            'Tipo(s): ' + dados[2] +
             (' e ' + dados[3] if dados[3] != 'NULL' else '') + '.'
         )
-        self.regiao['text'] += dados[8]
-        self.atributos['text'] = self.atributos['text'] % (dados[5:8])
-        self.descricao['text'] = str(
+        self.regiao['text'] = 'Região: ' + dados[8] + '.'
+        self.atributos['text'] = str(
+            'Vida: %s\nDefesa: %s\nAtaque: %s\n' % (dados[5:8])
+        )
+        self.descricao['text'] = '   ' + str(
                 dados[9] if dados[9] != 'NULL' else 'Não há descrição.'
         )
         self.pokemon_atual = numero
