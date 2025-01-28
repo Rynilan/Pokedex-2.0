@@ -1,6 +1,8 @@
 from tkinter import Tk, Button, Frame
 from view.mainframe import MainFrame
 from view.bio import Biografia
+from view.index import PokedexScreen
+from view.view import View
 
 
 class Master:
@@ -16,12 +18,12 @@ class Master:
 
         # Declaração dos objetos mainframe.
         # (Falta atribuir objeto).
+        args = (self._master, self._mainframe, self)
         self._gerenciar: MainFrame
-        self._ver: MainFrame
-        self._biografia: MainFrame = Biografia(
-            self._master, self._mainframe, self
-        )
-        self._index: MainFrame
+        self._ver: MainFrame = View(*args)
+        self._biografia: MainFrame = Biografia(*args)
+        self._index: MainFrame = PokedexScreen(*args)
+        del args
 
         # Criação dos botões de sair e menu principal
         self.__buttons = Frame(self._master)
@@ -37,7 +39,7 @@ class Master:
                              text='Sair')
         self.__exit.pack(side='right', expand=True, pady=0)
 
-        # Posicionamento do mainframe.
+        # Posicionamento do mainframe.e
         self._mainframe.place(relwidth=1, relheight=0.95)
         self._load(self._index, self.__main_menu.config, 'disabled')
         self._master.mainloop()
