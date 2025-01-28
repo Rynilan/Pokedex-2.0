@@ -1,4 +1,4 @@
-from view.tela import Tela
+from view.mainframe import MainFrame
 from tkinter import (Toplevel, Tk, Label, Button, Frame, Text,
                      Scrollbar, ttk, END)
 from model.crud import (
@@ -7,10 +7,12 @@ from model.crud import (
 from assets.classes.Custom_Entry import Entry
 from control.validadores.validacao_nome import validar_nome
 from control.validadores.validacao_numero import validar_numero
-from control.formatadores.formatador_nome import formatar_nome
 
 
-class Managment(Tela):
+class Managment(MainFrame):
+    def _create_things(self: object, **kwargs) -> None:
+        pass
+
     def _html(self: object, master: Tk | Toplevel) -> None:
         top = Toplevel(master)
         top.resizable(False, False)

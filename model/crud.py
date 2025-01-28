@@ -60,7 +60,7 @@ def select_join(
                 case _:
                     tabela = 'tb_pokemons'
             filtro += tabela + '.' + campos[index] + ' {} {} and '.format(
-                *(('=', '"' + valores + '"') if campos[index] not in
+                *(('=', '"' + valores[index] + '"') if campos[index] not in
                   ('nome', 'descricao', 'foto') else
                   ('like', '"%' + valores[index] + '%"'))
             )

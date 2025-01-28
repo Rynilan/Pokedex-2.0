@@ -3,6 +3,7 @@ from view.mainframe import MainFrame
 from view.bio import Biografia
 from view.index import PokedexScreen
 from view.view import View
+from view.managment import Managment
 
 
 class Master:
@@ -19,7 +20,7 @@ class Master:
         # Declaração dos objetos mainframe.
         # (Falta atribuir objeto).
         args = (self._master, self._mainframe, self)
-        self._gerenciar: MainFrame
+        self._gerenciar: MainFrame = Managment(*args)
         self._ver: MainFrame = View(*args)
         self._biografia: MainFrame = Biografia(*args)
         self._index: MainFrame = PokedexScreen(*args)
@@ -46,7 +47,8 @@ class Master:
 
     def __selfdestruct(self: object) -> None:
         ''' Destrói todo widget que estiver no self._mainframe.'''
-        for name, child in self._mainframe.children.items():
+        elementos = tuple(self._mainframe.children.values())
+        for child in elementos:
             child.destroy()
         self.__main_menu.config(state='normal')
 
@@ -78,7 +80,10 @@ class Master:
         ''' Aplica o estilo dado ao widget especificado. '''
         # Adicione os outros atributos a para o design nesse método.
         BG1 = '#fff'
-        child.config(bg=BG1)
+        try:
+            child.config(bg=BG1)
+        except Exception:
+            pass
 
     def _css_recursivo(
         self: object, objeto: Frame | Tk, nivel: int = 0

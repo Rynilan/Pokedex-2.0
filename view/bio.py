@@ -60,6 +60,10 @@ class Biografia(MainFrame):
             )[0])
         except Exception as error:
             messagebox.showwarning('ERRO', error)
+            print(tuple(str(dado) for dado in select_join(
+                                True, ('numero_geral', ), (str(numero), )
+            )[0]))
+
             return
 
         # Tentar carregar imagem

@@ -19,10 +19,13 @@ class View(MainFrame):
         self.biografia = Button(self._mainframe, text='Detalhes',
                                 command=lambda:
                                     self._tela._load(
-                                        self._mainframe,
+                                        self._tela._biografia,
                                         None,
                                         None,
-                                        numero=int(self.tabela.selection()[1:])
+                                        numero=int(
+                                            self.tabela.selection()[0][1:],
+                                            16
+                                        )
                                     ))
         self.biografia.place(relx=0.2, rely=0.25, relwidth=0.6)
 
