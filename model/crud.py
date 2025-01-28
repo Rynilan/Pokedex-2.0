@@ -46,7 +46,24 @@ def select_join(
     if len(campos) == len(valores) and campos and valores:
         filtro += 'where '
         for index in range(len(campos)):
-            filtro += 'tb_pokemons.' + campos[index] + '=' + str(valores[index]) + ' and '
+            match (campos[index]):
+                case 'tipo_1' | 'tipo_2':
+                    tabela = 'tipo' + campos[index][-1]
+                    campos = list(campos)
+                    campos[index] = 'nome'
+                    campos = tuple(campos)
+                case 'regiao':
+                    tabela = 'tb_regioes'
+                    campos = list(campos)
+                    campos[index] = 'nome'
+                    campos = tuple(campos)
+                case _:
+                    tabela = 'tb_pokemons'
+            filtro += tabela + '.' + campos[index] + ' {} {} and '.format(
+                *(('=', '"' + valores + '"') if campos[index] not in
+                  ('nome', 'descricao', 'foto') else
+                  ('like', '"%' + valores[index] + '%"'))
+            )
         filtro = filtro.removesuffix('and ')
     cursor.execute(
         'SELECT tb_pokemons.numero_geral, tb_pokemons.nome, tipo1.nome AS tipo1_nome, tipo2.nome AS tipo2_nome, tb_pokemons.foto, tb_pokemons.vida, tb_pokemons.defesa, tb_pokemons.ataque, tb_regioes.nome AS regiao_nome, tb_pokemons.descricao FROM tb_pokemons JOIN tb_tipos AS tipo1 ON tb_pokemons.tipo_1 = tipo1.id LEFT JOIN tb_tipos AS tipo2 ON tb_pokemons.tipo_2 = tipo2.id JOIN tb_regioes ON tb_pokemons.regiao = tb_regioes.id ' + filtro + ' order by numero_geral;'
