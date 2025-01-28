@@ -41,7 +41,7 @@ class Master:
 
         # Posicionamento do mainframe.e
         self._mainframe.place(relwidth=1, relheight=0.95)
-        self._load(self._index, self.__main_menu.config, 'disabled')
+        self._load(self._index, self.__main_menu.config, {'state': 'disabled'})
         self._master.mainloop()
 
     def __selfdestruct(self: object) -> None:
