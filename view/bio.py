@@ -11,6 +11,14 @@ class Biografia(MainFrame):
     ) -> None:
         ''' Parâmetro de número é necessário, numero=int'''
 
+        # Preparando e adicionando imagem de fundo.
+        self.background = Label(self._mainframe)
+        imagem = ImageTk.PhotoImage(Image.open().resize(
+            (300, 300)
+        ))
+        self.background.config(image=imagem)
+        self.background.image = imagem
+
         # Botões de navegação dentre os pokemons.
         self.botoes = Frame(self._mainframe)
         self.botoes.pack(side='bottom', fill='x')

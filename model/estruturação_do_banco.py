@@ -2,6 +2,7 @@ from model.crud import conectar
 from os import path
 
 
+SEPARADOR = '\\'
 def banco_de_dados():
     carregar_estrutura()
     inserir_registros()
