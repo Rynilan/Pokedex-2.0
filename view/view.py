@@ -7,6 +7,18 @@ from view.mainframe import MainFrame
 class View(MainFrame):
     def _create_things(self: object) -> None:
 
+# Preparando e adicionando imagem de fundo.
+        from model.crud import SEPARADOR
+        self.background = Label(self._mainframe)
+        imagem = ImageTk.PhotoImage(Image.open( endereco: str = path.dirname(
+                                    path.realpath(__file__)
+                                ).removesuffix('view')+'assets'+SEPARADOR+'background'+SEPARADOR+'background.png').resize(
+            (1024, 712)
+        ))
+        self.background.config(image=imagem)
+        self.background.image = imagem
+        self.background.place(x=0,y=0,relheight=1,relheight=1)
+
         self.pesquisa_campo = Entry(self._mainframe)
         self.pesquisa_campo.place(relx=0.1, rely=0.1, relwidth=0.5)
         self.pesquisa_opcao = ttk.Combobox(self._mainframe, state='readonly',

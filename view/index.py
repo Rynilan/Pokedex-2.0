@@ -5,6 +5,18 @@ from tkinter import Label, Entry, Button, Frame
 class PokedexScreen(MainFrame):
     def _create_things(self, **kwargs) -> None:
 
+# Preparando e adicionando imagem de fundo.
+        from model.crud import SEPARADOR
+        self.background = Label(self._mainframe)
+        imagem = ImageTk.PhotoImage(Image.open( endereco: str = path.dirname(
+                                    path.realpath(__file__)
+                                ).removesuffix('view')+'assets'+SEPARADOR+'background'+SEPARADOR+'background.png').resize(
+            (1024, 712)
+        ))
+        self.background.config(image=imagem)
+        self.background.image = imagem
+        self.background.place(x=0,y=0,relheight=1,relheight=1)
+
         screen_frame = Frame(self._mainframe)
         screen_frame.place(relwidth=1, relheight=1)
 
