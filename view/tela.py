@@ -81,7 +81,7 @@ class Master:
         # Adicione os outros atributos a para o design nesse método.
         BG1 = '#fff'
         try:
-            child.config(bg=BG1)
+            child.config(bg=BG1,fg="black",font=("times new roman","14"))
         except Exception:
             pass
 
@@ -92,6 +92,10 @@ class Master:
             nível inicialmente irá iterar pelos filhos do 'pai' e aplicar 
             estilo, irá olhar os filhos dos filhos do pai (até cinco níveis)
             caso este tenha.'''
+        if type(objeto) is Tk :
+            objeto.geometry("1024x712")
+            objeto.title("pokedex SENAC")
+            objeto.resizable(False,False)
         if nivel > 5:
             print(objeto.config)
             raise RecursionError('Recursion limit acheived, max is 5.')
