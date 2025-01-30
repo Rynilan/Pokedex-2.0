@@ -1,52 +1,59 @@
-from view.mainframe import MainFrame
-from tkinter import Label, Entry, Button, Frame
+from tkinter import Label, Entry, Button, Frame, Canvas, Tk
+from PIL import Image, ImageTk
+import os
 
-class PokedexScreen(MainFrame):
-    def __init__(self, *args, **kwargs):
-        # Inicialização da classe MainFrame, que gerencia a janela e o frame principal
-        super().__init__(*args, **kwargs)
-        
-    def _create_things(self, **kwargs):
-        '''Método obrigatório que cria os widgets na tela'''
-        
-        # Frame principal dentro do _mainframe para organização
-        screen_frame = Frame(self._mainframe)
-        screen_frame.place(relwidth=1, relheight=1)
-        
-        title_label = Label(
-            screen_frame,
-            text="Bem-vindo à Pokédex!",
-            font=("Arial", 24, "bold"),
-            bg="#fff"
-        )
-        title_label.pack(pady=20)
+class PokedexScreen:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Pokedex")
+        self.root.geometry("800x500")  # Ajuste conforme o tamanho da imagem
 
-        # Campo de texto para inserir o nome do Pokémon
-        search_label = Label(screen_frame, text="Digite o nome do Pokémon:", bg="#fff")
-        search_label.pack(pady=5)
+        # Criar um Frame para a interface
+        self.mainframe = Frame(root)
+        self.mainframe.pack(fill="both", expand=True)
 
-        search_entry = Entry(screen_frame, font=("Arial", 14))
-        search_entry.pack(pady=10)
+        # ** Adicionar Imagem de Fundo **
+        self._set_background()
 
-        # Função de callback para quando o botão de pesquisa for pressionado
+        # Criar elementos da interface
+        self._create_things()
+
+    def _set_background(self):
+        """Carrega e define uma imagem como fundo da tela"""
+        caminho_imagem = os.path.join(os.getcwd(), "assets", "background", "Pokemons ofc.jpg")
+
+        # Abrir a imagem e converter para o formato do Tkinter
+        imagem = Image.open(caminho_imagem)
+        imagem = imagem.resize((800, 500), Image.LANCZOS)  # Ajuste para o tamanho da janela
+        self.bg_image = ImageTk.PhotoImage(imagem)  # Armazena a referência na classe
+
+        # Criar Canvas para exibir a imagem
+        self.background = Canvas(self.mainframe, width=800, height=500)
+        self.background.pack(fill="both", expand=True)
+        self.background.create_image(0, 0, image=self.bg_image, anchor="nw")  # Posiciona no topo esquerdo
+
+    def _create_things(self):
+        """Cria os componentes da interface"""
+        title_label = Label(self.mainframe, text='Bem-vindo à Pokedex',
+                            font=('Arial', 24, 'bold'), bg='#fff')
+        title_label.place(relx=0.5, rely=0.1, anchor="center")
+
+        search_label = Label(self.mainframe, text='Digite o nome do Pokémon:', bg='#fff')
+        search_label.place(relx=0.5, rely=0.3, anchor="center")
+
+        search_entry = Entry(self.mainframe, font=('Arial', 14))
+        search_entry.place(relx=0.5, rely=0.4, anchor="center")
+
         def search_pokemon():
             pokemon_name = search_entry.get()
-            print(f"Pesquisando Pokémon: {pokemon_name}")
-            # e exibir informações sobre ele na tela.
+            print(f'Pesquisando Pokémon: {pokemon_name}')
 
-        # Botão para pesquisar o Pokémon
-        search_button = Button(
-            screen_frame, text="Pesquisar", font=("Arial", 14),
-            command=search_pokemon
-        )
-        search_button.pack(pady=20)
+        search_button = Button(self.mainframe, text='Pesquisar', font=('Arial', 14),
+                               command=search_pokemon)
+        search_button.place(relx=0.5, rely=0.5, anchor="center")
 
-        # Exemplo de como mostrar um Pokémon depois de pesquisa (placeholder)
-        result_label = Label(
-            screen_frame,
-            text="Resultado: Nenhum Pokémon encontrado",
-            font=("Arial", 14),
-            bg="#fff"
-        )
-        result_label.pack(pady=20)
-
+# Criar e rodar a aplicação
+if __name__ == "__main__":
+    root = Tk()
+    app = PokedexScreen(root)
+    root.mainloop()
