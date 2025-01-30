@@ -9,19 +9,7 @@ class Biografia(MainFrame):
         ''' Parâmetro de número é necessário, numero=int'''
 
         # Preparando e adicionando imagem de fundo.
-        from model.crud import SEPARADOR
-        from os import path
-        self.background = Label(self._mainframe)
-        imagem = ImageTk.PhotoImage(Image.open(path.dirname(
-                                    path.realpath(__file__)
-                                    ).removesuffix('view')
-            + 'assets' + SEPARADOR + 'background' + SEPARADOR +
-            'background.png').resize(
-            (1024, 712)
-        ))
-        self.background.config(image=imagem)
-        self.background.image = imagem
-        self.background.place(x=0, y=0, relheight=1, relwidth=1)
+        self._image('background')
 
         # Botões de navegação entre os Pokémon
         self.botoes = Frame(self._mainframe)
