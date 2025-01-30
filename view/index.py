@@ -6,13 +6,13 @@ class PokedexScreen:
     def __init__(self, root):
         self.root = root
         self.root.title("Pokedex")
-        self.root.geometry("800x500")  # Ajuste conforme o tamanho da imagem
+        self.root.geometry("800x500")
 
         # Criar um Frame para a interface
         self.mainframe = Frame(root)
         self.mainframe.pack(fill="both", expand=True)
 
-        # ** Adicionar Imagem de Fundo **
+        # Adicionar Imagem de Fundo
         self._set_background()
 
         # Criar elementos da interface
@@ -21,6 +21,10 @@ class PokedexScreen:
     def _set_background(self):
         """Carrega e define uma imagem como fundo da tela"""
         caminho_imagem = os.path.join(os.getcwd(), "assets", "background", "Pokemons ofc.jpg")
+
+        if not os.path.exists(caminho_imagem):
+            print(f"Imagem de fundo não encontrada: {caminho_imagem}")
+            return  # Se a imagem não for encontrada, evita erro
 
         # Abrir a imagem e converter para o formato do Tkinter
         imagem = Image.open(caminho_imagem)
@@ -34,26 +38,36 @@ class PokedexScreen:
 
     def _create_things(self):
         """Cria os componentes da interface"""
-        title_label = Label(self.mainframe, text='Bem-vindo à Pokedex',
-                            font=('Arial', 24, 'bold'), bg='#fff')
-        title_label.place(relx=0.5, rely=0.1, anchor="center")
+        # Frame para os elementos da interface
+        self.ui_frame = Frame(self.mainframe, bg='#ffffff', bd=2)
+        self.ui_frame.place(relx=0.5, rely=0.3, anchor="center", width=400, height=200)
 
-        search_label = Label(self.mainframe, text='Digite o nome do Pokémon:', bg='#fff')
-        search_label.place(relx=0.5, rely=0.3, anchor="center")
+        title_label = Label(self.ui_frame, text='Bem-vindo à Pokedex',
+                            font=('Arial', 18, 'bold'), bg='#ffffff')
+        title_label.pack(pady=10)
 
-        search_entry = Entry(self.mainframe, font=('Arial', 14))
-        search_entry.place(relx=0.5, rely=0.4, anchor="center")
+        search_label = Label(self.ui_frame, text='Digite o nome do Pokémon:',
+                             bg='#ffffff', font=('Arial', 12))
+        search_label.pack()
 
-        def search_pokemon():
-            pokemon_name = search_entry.get()
-            print(f'Pesquisando Pokémon: {pokemon_name}')
+        self.search_entry = Entry(self.ui_frame, font=('Arial', 14), width=25)
+        self.search_entry.pack(pady=5)
 
-        search_button = Button(self.mainframe, text='Pesquisar', font=('Arial', 14),
-                               command=search_pokemon)
-        search_button.place(relx=0.5, rely=0.5, anchor="center")
+        search_button = Button(self.ui_frame, text='Pesquisar', font=('Arial', 14),
+                               command=self.search_pokemon)
+        search_button.pack(pady=5)
+
+    def search_pokemon(self):
+        """Função para buscar Pokémon (futura implementação)"""
+        pokemon_name = self.search_entry.get().strip()
+        if not pokemon_name:
+            print("Nenhum nome digitado.")
+            return
+        print(f'Pesquisando Pokémon: {pokemon_name}')
 
 # Criar e rodar a aplicação
 if __name__ == "__main__":
     root = Tk()
     app = PokedexScreen(root)
     root.mainloop()
+
