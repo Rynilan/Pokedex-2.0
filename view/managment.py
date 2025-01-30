@@ -1,5 +1,5 @@
 from view.mainframe import MainFrame
-from tkinter import (Toplevel, Tk, Label, Button, Frame, Text,
+from tkinter import (Label, Button, Frame, Text,
                      Scrollbar, ttk, END)
 from model.crud import (
         campos, conectar, tipos, regioes, select_join, insert, update, delete
@@ -11,18 +11,7 @@ from control.validadores.validacao_numero import validar_numero
 
 class Managment(MainFrame):
     def _create_things(self: object, **kwargs) -> None:
-        pass
 
-    def _html(self: object, master: Tk | Toplevel) -> None:
-        top = Toplevel(master)
-        top.resizable(False, False)
-        top.geometry('1300x700')
-        top.title('Gerenciamento de pokemons')
-        self.top = top
-        self.sair = Button(top, command=top.destroy, text='Sair')
-        self.sair.pack(side='bottom', fill='x')
-
-        # Testa a conexão com o banco.
         try:
             tuple(elemento.close() for elemento in conectar())
         except Exception as e:  # Detecta qualquer erro
@@ -33,7 +22,7 @@ class Managment(MainFrame):
             return
 
         # Criação dos campos para inserção de dados do usuário.
-        frame_campos = Frame(top)
+        frame_campos = Frame(self._mainframe)
         frame_campos.place(x=10, y=10, relwidth=0.45, relheight=0.9)
         self.texto_numero = Label(frame_campos, text='Numero')
         self.campo_numero = Entry(frame_campos)
@@ -82,7 +71,7 @@ class Managment(MainFrame):
         self.campo_descricao.pack(pady=(4, 0))
 
         # Criação dos botões parqa as ações especificadas.
-        frame_acao = Frame(top, bg='white')
+        frame_acao = Frame(self._mainframe, bg='white')
         frame_acao.place(relx=0.55, y=10, relwidth=0.45, relheight=0.2)
         self.registrar = Button(frame_acao, text='Registrar',
                                 command=self.insert)
@@ -98,7 +87,7 @@ class Managment(MainFrame):
         self.pesquisa.pack(fill='x')
 
         # Criação da tabela e suas barras de rolagem.
-        self.frame_tabela = Frame(self.top)
+        self.frame_tabela = Frame(self._mainframe)
         self.frame_tabela.place(relx=0.55,
                                 rely=0.25,
                                 relheight=0.7,
@@ -127,7 +116,7 @@ class Managment(MainFrame):
 
         try:
             return (self.campo_numero.custom_get(validar_numero),
-                    self.campo_nome.custom_get(validar_nome, formatar_nome),
+                    self.campo_nome.custom_get(validar_nome),
                     self.campo_descricao.get('1.0', 'end-1c'),
                     self.campo_vida.custom_get(validar_numero),
                     self.campo_ataque.custom_get(validar_numero),
@@ -142,8 +131,8 @@ class Managment(MainFrame):
     def insert(self: object) -> None:
         insert(self.pegar_dados(),
                (
-               'numero', 'nome', 'descrição', 'vida', 'ataque', 'defesa',
-               'tipo1', 'tipo2', 'foto', 'região'
+               'numero_geral', 'nome', 'descricao', 'vida', 'ataque', 'defesa',
+               'tipo1', 'tipo2', 'foto', 'regiao'
                )
                )
 

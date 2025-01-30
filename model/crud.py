@@ -1,5 +1,7 @@
 from mysql.connector import connect
 
+SEPARADOR = '/'
+
 
 def conectar(com_banco: bool = True):
     banco = connect(host='localhost',
@@ -90,9 +92,9 @@ def insert(valores: tuple[str],
             valores[indice] = cursor.fetchall()
         parametro += ' %s'
 
-    cursor.execute('insert into tb_pokemons {} values {};'.format(
-        campos.__str__(), valores.__str__()
-    ))
+    cursor.execute('insert into tb_pokemons {} values ({});'.format(
+        campos.__str__(), parametro
+    ), valores)
     banco.commit()
     cursor.close()
     banco.close()

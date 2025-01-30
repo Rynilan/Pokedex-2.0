@@ -1,4 +1,4 @@
-from tkinter import Tk, Button, Frame
+from tkinter import Tk, Button, Frame, Canvas
 from view.mainframe import MainFrame
 from view.bio import Biografia
 from view.index import PokedexScreen
@@ -81,7 +81,9 @@ class Master:
         # Adicione os outros atributos a para o design nesse método.
         BG1 = '#fff'
         try:
-            child.config(bg=BG1,fg="black",font=("times new roman","14"))
+            if type(child) is not Canvas:
+                child.config(bg=BG1)
+                child.config(fg="black", font=("times new roman","14"))
         except Exception:
             pass
 
@@ -92,10 +94,10 @@ class Master:
             nível inicialmente irá iterar pelos filhos do 'pai' e aplicar 
             estilo, irá olhar os filhos dos filhos do pai (até cinco níveis)
             caso este tenha.'''
-        if type(objeto) is Tk :
+        if type(objeto) is Tk:
             objeto.geometry("1024x712")
             objeto.title("pokedex SENAC")
-            objeto.resizable(False,False)
+            objeto.resizable(False, False)
         if nivel > 5:
             print(objeto.config)
             raise RecursionError('Recursion limit acheived, max is 5.')

@@ -1,21 +1,24 @@
 from view.mainframe import MainFrame
-from tkinter import Label, Entry, Button, Frame
+from tkinter import Label, Entry, Button, Frame, Canvas
+from PIL import ImageTk
 
 
 class PokedexScreen(MainFrame):
     def _create_things(self, **kwargs) -> None:
 
-# Preparando e adicionando imagem de fundo.
+        # Preparando e adicionando imagem de fundo.
         from model.crud import SEPARADOR
-        self.background = Label(self._mainframe)
-        imagem = ImageTk.PhotoImage(Image.open( endereco: str = path.dirname(
-                                    path.realpath(__file__)
-                                ).removesuffix('view')+'assets'+SEPARADOR+'background'+SEPARADOR+'background.png').resize(
-            (1024, 712)
-        ))
-        self.background.config(image=imagem)
-        self.background.image = imagem
-        self.background.place(x=0,y=0,relheight=1,relheight=1)
+        from os import path
+        self.background = Canvas(self._mainframe)
+        imagem = ImageTk.PhotoImage(
+            file=path.realpath(__file__).removesuffix(
+                'view' + SEPARADOR + 'index.py'
+            ) + 'assets' + SEPARADOR + 'background' +
+                SEPARADOR + 'background.png'
+        )
+        self.background.place(relx=0, rely=0, relheight=1, relwidth=1)
+        self.background.create_image(0, 0, image=imagem)
+        self.imagem = imagem
 
         screen_frame = Frame(self._mainframe)
         screen_frame.place(relwidth=1, relheight=1)
@@ -61,6 +64,6 @@ class PokedexScreen(MainFrame):
         botao_gerir = Button(screen_frame, text='Gerir Pokemons',
                              command=lambda:
                              self._tela._load(
-                                 self._tela._managment, None, None
+                                 self._tela._gerenciar, None, None
                              ))
         botao_gerir.pack(pady=10)
