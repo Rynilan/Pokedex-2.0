@@ -1,4 +1,4 @@
-from tkinter import messagebox, Frame, Label, Button
+from tkinter import messagebox, Frame, Label, Button, CENTER
 from model.crud import select_join
 from view.mainframe import MainFrame
 from PIL import Image, ImageTk  # Importado no topo para evitar exceções tardias
@@ -13,7 +13,7 @@ class Biografia(MainFrame):
 
         # Botões de navegação entre os Pokémon
         self.botoes = Frame(self._mainframe)
-        self.botoes.pack(side='bottom', fill='x')
+        self.botoes.place(relx=0.75, rely=0.90, anchor=CENTER)
 
         self.ultimo = Button(self.botoes, text='▾',
                              command=lambda: self.trocar_pokemon(151))
@@ -37,13 +37,13 @@ class Biografia(MainFrame):
 
         # Criando os elementos visuais
         self.imagem = Label(self._mainframe)
-        self.imagem.place(relx=0.1, rely=0.1)
+        self.imagem.place(relx=0.15, rely=0.4)
 
         self.titulo = Label(self._mainframe)
-        self.titulo.pack(side='top', fill='x')
+        self.titulo.place(relx=0.1, rely=0.9)
 
         self.dados = Frame(self._mainframe)
-        self.dados.place(relx=0.35, rely=0.1, relwidth=0.65, relheight=0.8)
+        self.dados.place(relx=0.57, rely=0.35, relwidth=0.35, relheight=0.3)
 
         self.tipo = Label(self.dados)
         self.tipo.pack()
@@ -71,7 +71,7 @@ class Biografia(MainFrame):
 
         # Tentar carregar imagem
         try:
-            imagem = Image.open(dados[4]).resize((300, 300))
+            imagem = Image.open(dados[4]).resize((200, 200))
             imagem = ImageTk.PhotoImage(imagem)
 
             self.imagem.config(image=imagem)
