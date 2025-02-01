@@ -1,6 +1,6 @@
 from mysql.connector import connect
 
-SEPARADOR = '\\'
+SEPARADOR = '/'
 
 
 def conectar(com_banco: bool = True):

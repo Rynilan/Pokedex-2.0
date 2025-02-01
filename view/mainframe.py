@@ -18,17 +18,21 @@ class MainFrame(ABC):
         pass
 
     def _image(self, imagem):
-        from os import path
-        from tkinter import Label
-        from model.crud import SEPARADOR
-        from PIL import ImageTk, Image
-        self.background = Label(self._mainframe)
-        imagem = ImageTk.PhotoImage(Image.open(path.dirname(
-                                    path.realpath(__file__)
-                                    ).removesuffix('view')
-            + 'assets' + SEPARADOR + 'background'
-            + SEPARADOR + imagem + '.png').resize((1024, 712)))
-        self.background.config(image=imagem)
-        self.background.image = imagem
-        self.background.place(x=0, y=0, relheight=1, relwidth=1)
-
+        try:
+            teste = self.background._name
+            teste.count('&')
+            return
+        except NameError:
+            from os import path
+            from tkinter import Label
+            from model.crud import SEPARADOR
+            from PIL import ImageTk, Image
+            self.background = Label(self._mainframe)
+            imagem = ImageTk.PhotoImage(Image.open(path.dirname(
+                                        path.realpath(__file__)
+                                        ).removesuffix('view')
+                + 'assets' + SEPARADOR + 'background'
+                + SEPARADOR + imagem + '.png').resize((1024, 712)))
+            self.background.config(image=imagem)
+            self.background.image = imagem
+            self.background.place(x=0, y=0, relheight=1, relwidth=1)

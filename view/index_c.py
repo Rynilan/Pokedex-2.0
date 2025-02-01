@@ -5,14 +5,14 @@ class PokedexScreen(MainFrame):
     def __init__(self, *args, **kwargs):
         # Inicialização da classe MainFrame, que gerencia a janela e o frame principal
         super().__init__(*args, **kwargs)
-        
+
     def _create_things(self, **kwargs):
         '''Método obrigatório que cria os widgets na tela'''
-        
+
         # Frame principal dentro do _mainframe para organização
         screen_frame = Frame(self._mainframe)
         screen_frame.place(relwidth=1, relheight=1)
-        
+
         title_label = Label(
             screen_frame,
             text="Bem-vindo à Pokédex!",

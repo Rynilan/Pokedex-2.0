@@ -103,6 +103,7 @@ class Master:
             raise RecursionError('Recursion limit acheived, max is 5.')
         self.__css(objeto)
         for name, child in objeto.children.items():
+            if child._name.contains()
             self.__css(child)
             tipo = type(child)
             if (tipo is Frame or tipo is Tk) and child is not objeto:
