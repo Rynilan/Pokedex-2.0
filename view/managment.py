@@ -153,7 +153,7 @@ class Managment(MainFrame):
         self.atualizar_tabela()
 
     def delete(self: object) -> None:
-        delete(self.tabela.selection())
+        delete(int(self.tabela.selection()[0][1:], 16))
         self.atualizar_tabela()
 
     def _desenhar(self: object) -> None:
