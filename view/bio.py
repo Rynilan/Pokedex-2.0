@@ -1,7 +1,7 @@
 from tkinter import messagebox, Frame, Label, Button, CENTER
 from model.crud import select_join
 from view.mainframe import MainFrame
-from PIL import Image, ImageTk  # Importado no topo para evitar exceções tardias
+from PIL import Image, ImageTk
 
 
 class Biografia(MainFrame):
@@ -12,51 +12,58 @@ class Biografia(MainFrame):
         self._image('background')
 
         # Botões de navegação entre os Pokémon
-        self.botoes = Frame(self._mainframe)
-        self.botoes.place(relx=0.75, rely=0.90, anchor=CENTER)
-
-        self.ultimo = Button(self.botoes, text='▾',
+        self.ultimo = Button(self._mainframe, text='▾', name='botoesl_ultimo',
                              command=lambda: self.trocar_pokemon(151))
-        self.ultimo.grid(row=2, column=1)
+        self.ultimo.place(relx=0.59, rely=0.74, relwidth=0.12, relheight=0.075)
 
-        self.primeiro = Button(self.botoes, text='▴',
+        self.primeiro = Button(self._mainframe, text='▴',
+                               name='botoesl_primeiro',
                                command=lambda: self.trocar_pokemon(1))
-        self.primeiro.grid(row=0, column=1)
+        self.primeiro.place(relx=0.797, rely=0.74,
+                            relwidth=0.12, relheight=0.075)
 
-        self.proximo = Button(self.botoes, text='▸',
+        self.proximo = Button(self._mainframe, text='▸',
+                              name='botoesr_proximo',
                               command=lambda: self.trocar_pokemon(
                                 self.pokemon_atual + 1
                               ))
-        self.proximo.grid(row=1, column=2)
+        self.proximo.place(relx=0.753, rely=0.89, relwidth=0.06,
+                           relheight=0.075)
 
-        self.anterior = Button(self.botoes, text='◂',
+        self.anterior = Button(self._mainframe, text='◂',
+                               name='botoesr_anterior',
                                command=lambda: self.trocar_pokemon(
                                 self.pokemon_atual - 1
                                ))
-        self.anterior.grid(row=1, column=0)
+        self.anterior.place(relheight=0.075, relx=0.69, rely=0.89,
+                            relwidth=0.06)
 
         # Criando os elementos visuais
         self.imagem = Label(self._mainframe)
         self.imagem.place(relx=0.15, rely=0.4)
 
-        self.titulo = Label(self._mainframe)
-        self.titulo.place(relx=0.1, rely=0.9)
+        self.titulo = Label(self._mainframe, name='nome')
+        self.titulo.place(relx=0.085, rely=0.9)
 
-        self.dados = Frame(self._mainframe)
-        self.dados.place(relx=0.57, rely=0.35, relwidth=0.35, relheight=0.3)
+        self.dados = Frame(self._mainframe, name='dados_frame')
+        self.dados.place(relx=0.57, rely=0.4, relwidth=0.17, relheight=0.20)
 
-        self.tipo = Label(self.dados)
-        self.tipo.pack()
+        self.tipo = Label(self.dados, name='dados_tipo')
+        self.tipo.pack(anchor='w')
 
-        self.regiao = Label(self.dados)
-        self.regiao.pack()
+        self.regiao = Label(self.dados, name='dados_regiao')
+        self.regiao.pack(anchor='w')
 
-        self.atributos = Label(self.dados)
-        self.atributos.pack()
+        self.atributos = Label(self.dados, name='dados_atributos')
+        self.atributos.pack(anchor='w')
 
-        self.descricao = Label(self.dados, text='', justify='left',
-                               wraplength=350)  # Ajuste no wraplength
-        self.descricao.pack()
+        self.dados_2 = Frame(self._mainframe, name='dados_frame2')
+        self.dados_2.place(relx=0.765, rely=0.4, relwidth=0.17, relheight=0.20)
+
+        self.descricao = Label(self.dados_2, text='', justify='center',
+                               name='dados_descricao', wraplength=160)
+        self.descricao.place(relx=0.5, rely=0.5, relwidth=1, relheight=1,
+                             anchor=CENTER)
 
         self.colocar_dados(kwargs.get('numero'))
 
@@ -66,7 +73,7 @@ class Biografia(MainFrame):
                 True, ('numero_geral',), (str(numero),)
             )[0])
         except Exception as error:
-            messagebox.showwarning('ERRO', str(error))  # Convertendo erro para string
+            messagebox.showwarning('ERRO', str(error))
             return
 
         # Tentar carregar imagem
@@ -75,19 +82,24 @@ class Biografia(MainFrame):
             imagem = ImageTk.PhotoImage(imagem)
 
             self.imagem.config(image=imagem)
-            self.imagem.image = imagem  # Referência para evitar garbage collection
+            self.imagem.image = imagem
         except Exception as e:
             messagebox.showwarning("Erro",
-                                   f"Não foi possível carregar a imagem\n{str(e)}")
+                                   "Não foi possível carregar a imagem" +
+                                   f"\n{str(e)}")
 
         # Atualizando os textos
         self.titulo['text'] = f"{dados[0]}. {dados[1]}"
-        self.tipo['text'] = f"Tipo(s): {dados[2]}" + (f" e {dados[3]}" if dados[3] != 'NULL' else '') + "."
-        self.regiao['text'] = f"Região: {dados[8]}."
-        self.atributos['text'] = f"Vida: {dados[5]}\nDefesa: {dados[6]}\nAtaque: {dados[7]}"
-        self.descricao['text'] = "   " + (dados[9] if dados[9] != 'NULL' else "Não há descrição.")
+        self.tipo['text'] = f" Tipo(s): {dados[2]}" + (
+            f" e {dados[3]}" if dados[3] != 'NULL' else ''
+        ) + "."
+        self.regiao['text'] = f" Região: {dados[8]}."
+        self.atributos['text'] = str(f"Vida: {dados[5]}\nDefesa: {dados[6]}" +
+                                     f"\nAtaque: {dados[7]}")
+        self.descricao['text'] = "   " + (dados[9] if dados[9] != 'NULL' else
+                                          "Não há descrição.")
 
         self.pokemon_atual = numero  # Atualiza o Pokémon atual
 
     def trocar_pokemon(self, proximo: int):
-        self.colocar_dados(proximo)
+       self.colocar_dados(proximo)

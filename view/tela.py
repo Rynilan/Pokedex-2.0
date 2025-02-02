@@ -1,4 +1,4 @@
-from tkinter import Tk, Button, Frame, Canvas
+from tkinter import Tk, Button, Frame
 from view.mainframe import MainFrame
 from view.bio import Biografia
 from view.index import PokedexScreen
@@ -79,11 +79,30 @@ class Master:
     def __css(self: object, child: object) -> None:
         ''' Aplica o estilo dado ao widget especificado. '''
         # Adicione os outros atributos a para o design nesse método.
-        BG1 = '#fff'
+        FONT = ('Times New Roman', '14')
+        BG = '#fff'
+        FG = '#000'
+        CAMPOS = ('botoesr', 'botoesl', 'nome', 'dados')
         try:
-            if type(child) is not Canvas:
-                child.config(bg=BG1)
-                child.config(fg="black", font=("times new roman","14"))
+            for campo in CAMPOS:
+                if child._name.startswith(campo):
+                    match (campo):
+                        case 'botoesr':
+                            child.config(bg='#db4aff')
+                            child.config(fg=FG, font=FONT)
+                        case 'botoesl':
+                            child.config(bg='#ffa922')
+                            child.config(fg=FG, font=FONT)
+                        case 'nome':
+                            child.config(bg='#3fbd4a')
+                            child.config(fg='#000', font=FONT + ('bold', ))
+                        case 'dados':
+                            child.config(bg='#b3fff5')
+                            child.config(fg=FG, font=(FONT[0], '10', 'bold'),
+                                         justify='left')
+                    return
+            child.config(bg=BG)
+            child.config(fg=FG, font=FONT)
         except Exception:
             pass
 
@@ -91,7 +110,7 @@ class Master:
         self: object, objeto: Frame | Tk, nivel: int = 0
     ) -> None:
         ''' Dado um widget inicial (esperado instância de Tk) e ignorado o
-            nível inicialmente irá iterar pelos filhos do 'pai' e aplicar 
+            nível inicialmente irá iterar pelos filhos do 'pai' e aplicar
             estilo, irá olhar os filhos dos filhos do pai (até cinco níveis)
             caso este tenha.'''
         if type(objeto) is Tk:
@@ -103,7 +122,6 @@ class Master:
             raise RecursionError('Recursion limit acheived, max is 5.')
         self.__css(objeto)
         for name, child in objeto.children.items():
-            if child._name.contains()
             self.__css(child)
             tipo = type(child)
             if (tipo is Frame or tipo is Tk) and child is not objeto:

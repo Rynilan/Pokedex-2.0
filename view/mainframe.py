@@ -22,7 +22,7 @@ class MainFrame(ABC):
             teste = self.background._name
             teste.count('&')
             return
-        except NameError:
+        except AttributeError:
             from os import path
             from tkinter import Label
             from model.crud import SEPARADOR
