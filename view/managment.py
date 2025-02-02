@@ -119,23 +119,34 @@ class Managment(MainFrame):
                 raise ValueError("Tipo primário e secundário iguais.")
             if self.campo_tipo1.get() == '':
                 raise ValueError("Tipo1 não pode ser nulo.")
-            return (self.campo_numero.custom_get(validar_numero),
-                    self.campo_nome.custom_get(validar_nome),
-                    self.campo_descricao.get('1.0', 'end-1c').strip(),
-                    self.campo_vida.custom_get(validar_numero),
-                    self.campo_ataque.custom_get(validar_numero),
-                    self.campo_defesa.custom_get(validar_numero),
-                    self.campo_tipo1.get(),
-                    self.campo_tipo2.get() if self.campo_tipo2.get() != '' else
-                    'NULL',
-                    self.campo_foto.get().strip(),
-                    self.campo_regiao.get())
+            dados = (self.campo_numero.custom_get(validar_numero),
+                     self.campo_nome.custom_get(validar_nome),
+                     self.campo_descricao.get('1.0', 'end-1c').strip(),
+                     self.campo_vida.custom_get(validar_numero),
+                     self.campo_ataque.custom_get(validar_numero),
+                     self.campo_defesa.custom_get(validar_numero),
+                     self.campo_tipo1.get(),
+                     self.campo_tipo2.get() if self.campo_tipo2.get() != ''
+                     else 'NULL',
+                     self.campo_foto.get().strip(),
+                     self.campo_regiao.get())
+            self.campo_nome.delete(0, END)
+            self.campo_numero.delete(0, END)
+            self.campo_vida.delete(0, END)
+            self.campo_defesa.delete(0, END)
+            self.campo_ataque.delete(0, END)
+            self.campo_foto.delete(0, END)
+            self.campo_descricao.delete('1.0', 'end-1c')
+            return dados
         except ValueError as error:
             messagebox.showerror('ERRO', error)
 
     def insert(self: object) -> None:
+        dados = self.pegar_dados()
+        if not dados:
+            return
         try:
-            insert(self.pegar_dados(),
+            insert(dados,
                    (
                    'numero_geral', 'nome', 'descricao', 'vida', 'ataque', 'defesa',
                    'tipo1', 'tipo2', 'foto', 'regiao'
@@ -146,10 +157,11 @@ class Managment(MainFrame):
             messagebox.showerror('ERRO', erro)
 
     def update(self: object) -> None:
-        update(self.tabela.selection(), self.pegar_dados(), (
-               'numero', 'nome', 'descrição', 'vida', 'ataque', 'defesa',
-               'tipo1', 'tipo2', 'foto', 'região'
-               ))
+        int(self.tabela.selection()[0][1:], 16)
+        self.pegar_dados(), (
+        'numero', 'nome', 'descrição', 'vida', 'ataque', 'defesa',
+        'tipo1', 'tipo2', 'foto', 'região'
+        )
         self.atualizar_tabela()
 
     def delete(self: object) -> None:
