@@ -81,20 +81,27 @@ def insert(valores: tuple[str],
     banco, cursor = conectar()
     valores = list(valores)
     parametro = ''
+    parametro2 = '('
     for indice, valor in enumerate(valores):
-        if valor in regioes():
+        if campos[indice].find('tipo') != -1:
+            campos = list(campos)
+            campos[indice] = campos[indice].replace('tipo', 'tipo_')
+            campos = tuple(campos)
+        parametro2 += campos[indice] + ', '
+        if (valor, ) in regioes():
             cursor.execute('select id from tb_regioes where nome = %s;',
                            (valor, ))
             valores[indice] = cursor.fetchall()[0][0]
         elif valor in tipos():
             cursor.execute('select id from tb_tipos where nome = %s;',
                            (valor, ))
-            valores[indice] = cursor.fetchall()
-        parametro += ' %s'
-
-    cursor.execute('insert into tb_pokemons {} values ({});'.format(
-        campos.__str__(), parametro
-    ), valores)
+            valores[indice] = cursor.fetchall()[0][0]
+        parametro += ' %s,'
+    parametro = parametro.removesuffix(',')
+    parametro2 = parametro2.removesuffix(', ') + ')'
+    cursor.execute('insert into tb_pokemons {} values {};'.format(
+        parametro2, tuple(valores).__str__() if type(valores) is not tuple else valores.__str__()
+    ))
     banco.commit()
     cursor.close()
     banco.close()

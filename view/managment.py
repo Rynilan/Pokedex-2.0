@@ -1,6 +1,6 @@
 from view.mainframe import MainFrame
 from tkinter import (Label, Button, Frame, Text,
-                     Scrollbar, ttk, END)
+                     Scrollbar, ttk, messagebox, END)
 from model.crud import (
         campos, conectar, tipos, regioes, select_join, insert, update, delete
 )
@@ -116,26 +116,35 @@ class Managment(MainFrame):
         from tkinter import messagebox
 
         try:
+            if self.campo_tipo2.get() == self.campo_tipo1.get():
+                raise ValueError("Tipo primário e secundário iguais.")
+            if self.campo_tipo1.get() == '':
+                raise ValueError("Tipo1 não pode ser nulo.")
             return (self.campo_numero.custom_get(validar_numero),
                     self.campo_nome.custom_get(validar_nome),
-                    self.campo_descricao.get('1.0', 'end-1c'),
+                    self.campo_descricao.get('1.0', 'end-1c').strip(),
                     self.campo_vida.custom_get(validar_numero),
                     self.campo_ataque.custom_get(validar_numero),
                     self.campo_defesa.custom_get(validar_numero),
                     self.campo_tipo1.get(),
-                    self.campo_tipo2.get(),
-                    self.campo_foto.get(),
+                    self.campo_tipo2.get() if self.campo_tipo2.get() != '' else
+                    'NULL',
+                    self.campo_foto.get().strip(),
                     self.campo_regiao.get())
         except ValueError as error:
             messagebox.showerror('ERRO', error)
 
     def insert(self: object) -> None:
-        insert(self.pegar_dados(),
-               (
-               'numero_geral', 'nome', 'descricao', 'vida', 'ataque', 'defesa',
-               'tipo1', 'tipo2', 'foto', 'regiao'
-               )
-               )
+        try:
+            insert(self.pegar_dados(),
+                   (
+                   'numero_geral', 'nome', 'descricao', 'vida', 'ataque', 'defesa',
+                   'tipo1', 'tipo2', 'foto', 'regiao'
+                   )
+                   )
+            self.atualizar_tabela()
+        except Exception as erro:
+            messagebox.showerror('ERRO', erro)
 
     def update(self: object) -> None:
         update(self.tabela.selection(), self.pegar_dados(), (
@@ -185,7 +194,19 @@ class Managment(MainFrame):
 
     def atualizar_tabela(self: object) -> None:
         ''' Método que recriará a tabela sempre que houver atualização. '''
-        self.tabela.destroy()
+        self.frame_tabela.destroy()
+        self.frame_tabela = Frame(self._mainframe)
+        self.frame_tabela.place(relx=0.55,
+                                rely=0.25,
+                                relheight=0.7,
+                                relwidth=0.45)
+        self.tabela = ttk.Treeview()
+        self.yscroll: Scrollbar = Scrollbar(self.frame_tabela,
+                                            orient='vertical')
+        self.yscroll.place(relx=0.9, rely=0, relwidth=0.05, relheight=0.9)
+        self.xscroll: Scrollbar = Scrollbar(self.frame_tabela,
+                                            orient='horizontal')
+        self.xscroll.place(relx=0, rely=0.95, relwidth=0.9, relheight=0.04)
         self.tabela: ttk.Treeview = ttk.Treeview(
             self.frame_tabela,
             show='headings',
@@ -193,6 +214,7 @@ class Managment(MainFrame):
             yscrollcommand=self.yscroll.set,
             xscrollcommand=self.xscroll.set,
             columns=campos())
-        self.tabela.place(relx=0, rely=0, relheight=1, relwidth=0.9)
+        self.tabela.place(relx=0, rely=0, relheight=0.92, relwidth=0.9)
         self.yscroll.configure(command=self.tabela.yview)
         self.xscroll.configure(command=self.tabela.xview)
+        self.por_colunas()
