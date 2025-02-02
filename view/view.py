@@ -7,8 +7,6 @@ from view.mainframe import MainFrame
 class View(MainFrame):
     def _create_things(self: object) -> None:
 
-        self._image('manage')
-
         self.pesquisa_campo = Entry(self._mainframe)
         self.pesquisa_campo.place(relx=0.1, rely=0.1, relwidth=0.5)
         self.pesquisa_opcao = ttk.Combobox(self._mainframe, state='readonly',

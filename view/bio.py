@@ -8,9 +8,6 @@ class Biografia(MainFrame):
     def _create_things(self, **kwargs) -> None:
         ''' Parâmetro de número é necessário, numero=int'''
 
-        # Preparando e adicionando imagem de fundo.
-        self._image('background')
-
         # Botões de navegação entre os Pokémon
         self.ultimo = Button(self._mainframe, text='▾', name='botoesl_ultimo',
                              command=lambda: self.trocar_pokemon(151))

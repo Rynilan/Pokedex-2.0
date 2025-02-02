@@ -12,7 +12,6 @@ from control.validadores.validacao_numero import validar_numero
 class Managment(MainFrame):
     def _create_things(self: object, **kwargs) -> None:
 
-        self._image('manage')
         try:
             tuple(elemento.close() for elemento in conectar())
         except Exception as e:  # Detecta qualquer erro

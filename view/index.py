@@ -5,8 +5,6 @@ from tkinter import Button, CENTER
 class PokedexScreen(MainFrame):
     def _create_things(self, **kwargs) -> None:
 
-        self._image('start')
-
         botao_ver = Button(self._mainframe, text='Ver Pokemons',
                            command=lambda:
                                self._tela._load(self._tela._ver, None, None)

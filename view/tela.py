@@ -1,9 +1,12 @@
-from tkinter import Tk, Button, Frame
+from tkinter import Tk, Button, Frame, Label
 from view.mainframe import MainFrame
 from view.bio import Biografia
 from view.index import PokedexScreen
 from view.view import View
 from view.managment import Managment
+from os import path
+from model.crud import SEPARADOR
+from PIL import ImageTk, Image
 
 
 class Master:
@@ -20,10 +23,10 @@ class Master:
         # Declaração dos objetos mainframe.
         # (Falta atribuir objeto).
         args = (self._master, self._mainframe, self)
-        self._gerenciar: MainFrame = Managment(*args)
-        self._ver: MainFrame = View(*args)
-        self._biografia: MainFrame = Biografia(*args)
-        self._index: MainFrame = PokedexScreen(*args)
+        self._gerenciar: MainFrame = Managment(*args, 'manage')
+        self._ver: MainFrame = View(*args, 'manage')
+        self._biografia: MainFrame = Biografia(*args, 'background')
+        self._index: MainFrame = PokedexScreen(*args, 'start')
         del args
 
         # Criação dos botões de sair e menu principal
@@ -42,6 +45,8 @@ class Master:
 
         # Posicionamento do mainframe.e
         self._mainframe.place(relwidth=1, relheight=0.95)
+        self.__background = Label(self._mainframe, name='background_label')
+        self.__background.place(x=0, y=0, relwidth=1, relheight=1)
         self._load(self._index, self.__main_menu.config, {'state': 'disabled'})
         self._master.mainloop()
 
@@ -49,7 +54,8 @@ class Master:
         ''' Destrói todo widget que estiver no self._mainframe.'''
         elementos = tuple(self._mainframe.children.values())
         for child in elementos:
-            child.destroy()
+            if child._name != 'background_label':
+                child.destroy()
         self.__main_menu.config(state='normal')
 
     def _load(
@@ -74,7 +80,19 @@ class Master:
                 function(args)
             else:
                 function()
+        self._image(main._bg)
         self._css_recursivo(self._master)
+
+    def _image(self: object, imagem: str) -> None:
+        if not imagem:
+            return
+        imagem = ImageTk.PhotoImage(Image.open(path.dirname(
+                                    path.realpath(__file__)
+                                    ).removesuffix('view')
+            + 'assets' + SEPARADOR + 'background'
+            + SEPARADOR + imagem + '.png').resize((1024, 712)))
+        self.__background.config(image=imagem)
+        self.__background.image = imagem
 
     def __css(self: object, child: object) -> None:
         ''' Aplica o estilo dado ao widget especificado. '''
