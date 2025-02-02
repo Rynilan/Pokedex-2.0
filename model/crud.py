@@ -100,7 +100,8 @@ def insert(valores: tuple[str],
     parametro = parametro.removesuffix(',')
     parametro2 = parametro2.removesuffix(', ') + ')'
     cursor.execute('insert into tb_pokemons {} values {};'.format(
-        parametro2, tuple(valores).__str__() if type(valores) is not tuple else valores.__str__()
+        parametro2, tuple(valores).__str__() if type(valores) is not tuple else
+        valores.__str__()
     ))
     banco.commit()
     cursor.close()
