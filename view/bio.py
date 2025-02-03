@@ -1,5 +1,5 @@
 from tkinter import messagebox, Frame, Label, Button, CENTER
-from model.crud import select_join
+from model.crud import select_join, extreme_join
 from view.mainframe import MainFrame
 from PIL import Image, ImageTk
 
@@ -10,12 +10,12 @@ class Biografia(MainFrame):
 
         # Botões de navegação entre os Pokémon
         self.ultimo = Button(self._mainframe, text='▾', name='botoesl_ultimo',
-                             command=lambda: self.trocar_pokemon(151))
+                             command=lambda: self.trocar_pokemon('max'))
         self.ultimo.place(relx=0.59, rely=0.74, relwidth=0.12, relheight=0.075)
 
         self.primeiro = Button(self._mainframe, text='▴',
                                name='botoesl_primeiro',
-                               command=lambda: self.trocar_pokemon(1))
+                               command=lambda: self.trocar_pokemon('min'))
         self.primeiro.place(relx=0.797, rely=0.74,
                             relwidth=0.12, relheight=0.075)
 
@@ -66,9 +66,15 @@ class Biografia(MainFrame):
 
     def colocar_dados(self, numero: int) -> None:
         try:
-            dados = tuple(str(dado) for dado in select_join(
-                True, ('numero_geral',), (str(numero),)
-            )[0])
+            if numero not in ('max', 'min'):
+                dados = tuple(str(dado) for dado in select_join(
+                    True, ('numero_geral',), (str(numero),)
+                )[0])
+            else:
+                dados = tuple(str(dado) for dado in extreme_join(
+                    numero
+                )[0])
+
         except Exception as error:
             messagebox.showwarning('ERRO', str(error))
             return
@@ -99,4 +105,4 @@ class Biografia(MainFrame):
         self.pokemon_atual = numero  # Atualiza o Pokémon atual
 
     def trocar_pokemon(self, proximo: int):
-       self.colocar_dados(proximo)
+        self.colocar_dados(proximo)

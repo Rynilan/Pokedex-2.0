@@ -146,3 +146,16 @@ def pegar_dados(numero: int) -> tuple[str]:
     cursor.close()
     banco.close()
     return tuple(dado for dado in dados[0])
+
+
+def extreme_join(side: str) -> tuple[str]:
+    if side not in ('max', 'min'):
+        return
+    banco, cursor = conectar()
+    cursor.execute('select {}(numero_geral) from tb_pokemons;'.format(side))
+    numero = cursor.fetchall()[0]
+    cursor.execute('SELECT tb_pokemons.numero_geral, tb_pokemons.nome, tipo1.nome AS tipo1_nome, tipo2.nome AS tipo2_nome, tb_pokemons.foto, tb_pokemons.vida, tb_pokemons.defesa, tb_pokemons.ataque, tb_regioes.nome AS regiao_nome, tb_pokemons.descricao FROM tb_pokemons JOIN tb_tipos AS tipo1 ON tb_pokemons.tipo_1 = tipo1.id LEFT JOIN tb_tipos AS tipo2 ON tb_pokemons.tipo_2 = tipo2.id JOIN tb_regioes ON tb_pokemons.regiao = tb_regioes.id where numero_geral = %s order by numero_geral;', numero)
+    dados = cursor.fetchall()
+    cursor.close()
+    banco.close()
+    return dados
