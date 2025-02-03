@@ -74,6 +74,7 @@ class Biografia(MainFrame):
                 dados = tuple(str(dado) for dado in extreme_join(
                     numero
                 )[0])
+                numero = int(dados[0])
 
         except Exception as error:
             messagebox.showwarning('ERRO', str(error))
@@ -82,14 +83,20 @@ class Biografia(MainFrame):
         # Tentar carregar imagem
         try:
             imagem = Image.open(dados[4]).resize((200, 200))
+        except Exception:
+            from os import path
+            from model.crud import SEPARADOR
+            imagem = Image.open(
+                path.dirname(
+                    path.realpath(__file__)
+                ).removesuffix('view')
+                + 'assets' + SEPARADOR + 'pokemons'
+                + SEPARADOR + '0.png'
+            ).resize((200, 200))
+        finally:
             imagem = ImageTk.PhotoImage(imagem)
-
             self.imagem.config(image=imagem)
             self.imagem.image = imagem
-        except Exception as e:
-            messagebox.showwarning("Erro",
-                                   "Não foi possível carregar a imagem" +
-                                   f"\n{str(e)}")
 
         # Atualizando os textos
         self.titulo['text'] = f"{dados[0]}. {dados[1]}"
